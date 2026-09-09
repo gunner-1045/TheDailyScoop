@@ -1,0 +1,1512 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Daily Scoop</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Rubik:wght@400;500;600;700&display=swap">
+<style>
+:root{
+  --ground:#E9F2EC;
+  --surface:#FFFCF6;
+  --surface-2:#F5EFE3;
+  --ink:#3E2F2A;
+  --ink-soft:#7A6659;
+  --line:#DCD2C2;
+  --line-soft:#E9E0D0;
+  --strawberry:#D9647A;
+  --strawberry-soft:#F4D6DB;
+  --butterscotch:#E8B45F;
+  --pistachio:#5C7C4C;
+
+  --hit-bg:#5C7C4C;   --hit-fg:#FBFDF9;
+  --near-bg:#E8B45F;  --near-fg:#41301B;
+  --miss-bg:#DBD3C5;  --miss-fg:#57493D;
+
+  --shadow:rgba(62,47,42,.20);
+  --hatch:rgba(62,47,42,.05);
+  --focus:#C24A63;
+
+  --step--2:.7rem;
+  --step--1:.78rem;
+  --step-0:.95rem;
+  --step-1:1.12rem;
+  --step-2:1.45rem;
+  --step-3:2rem;
+  --step-4:2.9rem;
+
+  --sans:"Rubik","Segoe UI",system-ui,sans-serif;
+  --display:"Bricolage Grotesque","Trebuchet MS",sans-serif;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --ground:#211A19; --surface:#2C2322; --surface-2:#372B29;
+    --ink:#F2E8DF; --ink-soft:#B3A093; --line:#4A3B37; --line-soft:#3D302D;
+    --strawberry:#EE8C9E; --strawberry-soft:#4C2F35;
+    --butterscotch:#E2AC5C; --pistachio:#8FB57A;
+    --hit-bg:#5E7F4C; --hit-fg:#F4FAEE;
+    --near-bg:#C8933F; --near-fg:#241906;
+    --miss-bg:#463A37; --miss-fg:#BDADA1;
+    --shadow:rgba(0,0,0,.45); --hatch:rgba(255,240,230,.045); --focus:#F5A5B4;
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#211A19; --surface:#2C2322; --surface-2:#372B29;
+  --ink:#F2E8DF; --ink-soft:#B3A093; --line:#4A3B37; --line-soft:#3D302D;
+  --strawberry:#EE8C9E; --strawberry-soft:#4C2F35;
+  --butterscotch:#E2AC5C; --pistachio:#8FB57A;
+  --hit-bg:#5E7F4C; --hit-fg:#F4FAEE;
+  --near-bg:#C8933F; --near-fg:#241906;
+  --miss-bg:#463A37; --miss-fg:#BDADA1;
+  --shadow:rgba(0,0,0,.45); --hatch:rgba(255,240,230,.045); --focus:#F5A5B4;
+}
+
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background-color:var(--ground);
+  background-image:
+    repeating-linear-gradient(45deg, var(--hatch) 0 1px, transparent 1px 16px),
+    repeating-linear-gradient(-45deg, var(--hatch) 0 1px, transparent 1px 16px);
+  color:var(--ink); font-family:var(--sans); font-size:var(--step-0);
+  line-height:1.6; -webkit-font-smoothing:antialiased;
+}
+:focus-visible{outline:2.5px solid var(--focus);outline-offset:2px;border-radius:5px;}
+
+.awning{
+  height:68px;
+  background:repeating-linear-gradient(90deg, var(--strawberry) 0 32px, var(--surface) 32px 64px);
+  -webkit-mask:
+    linear-gradient(#000 0 0) 0 0/100% calc(100% - 14px) no-repeat,
+    radial-gradient(circle 14px at 14px 0, #000 98%, transparent 100%) 0 100%/28px 14px repeat-x;
+  mask:
+    linear-gradient(#000 0 0) 0 0/100% calc(100% - 14px) no-repeat,
+    radial-gradient(circle 14px at 14px 0, #000 98%, transparent 100%) 0 100%/28px 14px repeat-x;
+}
+
+.wrap{max-width:740px;margin:0 auto;padding:0 18px 72px;}
+.masthead{display:flex;align-items:center;justify-content:center;gap:15px;padding:30px 0 4px;}
+.masthead svg{flex:none;}
+h1{
+  font-family:var(--display);
+  font-variation-settings:"opsz" 96;
+  font-weight:800;font-size:var(--step-4);line-height:.98;
+  letter-spacing:-.028em;margin:0;text-wrap:balance;
+}
+.eyebrow{
+  text-align:center;font-size:var(--step--1);letter-spacing:.13em;
+  text-transform:uppercase;color:var(--ink-soft);font-weight:500;margin:0 0 22px;
+}
+.eyebrow b{color:var(--strawberry);font-weight:700;}
+
+.panel{
+  background:var(--surface);border:1.5px solid var(--line);
+  border-radius:16px;box-shadow:3px 3px 0 var(--shadow);
+}
+.stack{display:flex;flex-direction:column;gap:18px;}
+
+.archbar{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;
+  background:var(--strawberry-soft);border:1.5px solid var(--strawberry);
+  border-radius:14px;padding:11px 14px;
+}
+.archbar span{font-size:var(--step--1);font-weight:500;color:var(--ink);}
+.archbar button{padding:8px 15px;font-size:var(--step--1);}
+
+.help{padding:2px 4px;}
+.deep{margin-top:44px;}
+details{border-bottom:1.5px solid var(--line-soft);}
+details:last-child{border-bottom:none;}
+summary{
+  list-style:none;cursor:pointer;padding:14px 18px;
+  display:flex;align-items:center;gap:10px;
+  font-weight:600;font-size:var(--step-0);color:var(--ink);
+}
+summary::-webkit-details-marker{display:none;}
+summary::after{
+  content:"";margin-left:auto;flex:none;width:8px;height:8px;
+  border-right:2.2px solid var(--ink-soft);border-bottom:2.2px solid var(--ink-soft);
+  transform:rotate(45deg) translate(-2px,-2px);transition:transform .18s ease;
+}
+details[open] summary::after{transform:rotate(-135deg) translate(-2px,-2px);}
+summary:hover{background:var(--surface-2);border-radius:10px;}
+.badge{
+  font-family:var(--display);font-weight:700;font-size:var(--step--1);
+  background:var(--strawberry-soft);color:var(--strawberry);
+  border-radius:999px;padding:2px 10px;flex:none;
+}
+.help-body{padding:0 18px 20px;font-size:var(--step-0);line-height:1.68;}
+.help-body p{margin:0 0 13px;max-width:64ch;}
+.help-body p:last-child{margin-bottom:0;}
+
+.legend{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 14px;}
+.key{
+  display:inline-flex;align-items:center;gap:7px;
+  font-size:var(--step--1);font-weight:500;color:var(--ink-soft);
+  background:var(--surface-2);border-radius:999px;padding:5px 13px 5px 6px;
+}
+.key i{width:15px;height:15px;border-radius:5px;flex:none;display:block;}
+.key.k-hit i{background:var(--hit-bg);}
+.key.k-near i{background:var(--near-bg);}
+.key.k-miss i{background:var(--miss-bg);}
+
+.demo{margin:6px 0 14px;}
+.demo-cap{
+  font-size:var(--step--2);letter-spacing:.1em;text-transform:uppercase;
+  font-weight:600;color:var(--ink-soft);margin:0 0 8px;
+}
+.demo-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:5px;}
+.demo-grid .cell{min-height:50px;font-size:var(--step--2);}
+
+.glossary{display:flex;flex-direction:column;gap:13px;margin:6px 0 20px;}
+.gl{background:var(--surface-2);border-radius:12px;padding:14px 16px;border-left:4px solid var(--butterscotch);}
+.gl h3{margin:0 0 5px;font-family:var(--display);font-variation-settings:"opsz" 24;
+  font-weight:700;font-size:var(--step-1);letter-spacing:-.01em;}
+.gl p{margin:0 0 10px;font-size:var(--step--1);color:var(--ink-soft);line-height:1.65;max-width:60ch;}
+.gl .vals{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px;}
+.gl .vals span{
+  font-size:var(--step--2);font-weight:500;
+  background:var(--surface);border:1.5px solid var(--line);
+  border-radius:999px;padding:3px 11px;color:var(--ink);
+}
+.gl .vals span.sep{border:none;background:none;color:var(--ink-soft);padding:3px 2px;}
+.gl .eg{margin:0;font-size:var(--step--1);color:var(--ink);
+  border-top:1px dashed var(--line);padding-top:10px;}
+.gl .eg b{color:var(--strawberry);font-weight:600;}
+
+.archgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:8px;margin-top:4px;}
+.archgrid button{
+  background:var(--surface-2);border:1.5px solid var(--line);color:var(--ink);
+  border-radius:11px;padding:10px 6px;text-align:center;
+  display:flex;flex-direction:column;gap:2px;font-weight:600;font-size:var(--step--1);
+}
+.archgrid button:hover{background:var(--strawberry-soft);border-color:var(--strawberry);filter:none;}
+.archgrid button em{font-style:normal;font-size:var(--step--2);font-weight:500;
+  color:var(--ink-soft);}
+.archgrid button.today{border-color:var(--strawberry);border-width:2px;}
+.archgrid button.here{background:var(--strawberry);border-color:var(--strawberry);color:#FFF8F9;}
+.archgrid button.here em{color:#FFF8F9;opacity:.85;}
+.archgrid button.done em{color:var(--pistachio);}
+
+.board-scroll{overflow-x:auto;padding:16px 16px 6px;}
+.board{min-width:620px;display:flex;flex-direction:column;gap:6px;}
+.row{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;}
+.head span{
+  font-size:var(--step--2);letter-spacing:.09em;text-transform:uppercase;font-weight:600;
+  color:var(--ink-soft);text-align:center;padding-bottom:3px;
+}
+.cell{
+  border-radius:11px;min-height:60px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;padding:6px 5px;
+  font-size:var(--step--1);font-weight:500;line-height:1.25;overflow-wrap:anywhere;
+}
+.cell.empty{background:var(--surface-2);border:1.5px dashed var(--line);}
+.cell .mark{font-size:var(--step--2);opacity:.8;letter-spacing:.06em;
+  text-transform:uppercase;margin-top:3px;font-weight:600;}
+.cell.hit{background:var(--hit-bg);color:var(--hit-fg);}
+.cell.near{background:var(--near-bg);color:var(--near-fg);}
+.cell.miss{background:var(--miss-bg);color:var(--miss-fg);}
+.reveal{animation:drop .32s cubic-bezier(.2,.9,.3,1.3) backwards;}
+@keyframes drop{from{transform:translateY(-7px) scale(.94);opacity:0;}}
+.guessed-name{
+  grid-column:1 / -1;font-family:var(--display);font-variation-settings:"opsz" 20;
+  font-weight:600;font-size:var(--step-0);color:var(--ink-soft);padding:9px 2px 0;}
+.guessed-name em{font-style:normal;color:var(--strawberry);font-weight:700;}
+
+.boardfoot{display:flex;align-items:center;justify-content:space-between;
+  gap:12px;flex-wrap:wrap;padding:10px 16px 16px;}
+.ticket{
+  display:inline-flex;align-items:center;gap:9px;padding:8px 16px;
+  background:var(--strawberry-soft);border-radius:999px;
+  font-size:var(--step--1);font-weight:500;color:var(--ink);
+}
+.ticket .n{
+  font-family:var(--display);font-variation-settings:"opsz" 20;
+  font-size:var(--step-1);font-weight:700;color:var(--strawberry);
+  font-variant-numeric:tabular-nums;
+}
+.boardfoot .legend{margin:0;}
+
+.entry{padding:16px;position:relative;}
+.entry-row{display:flex;gap:9px;}
+input[type="text"]{
+  flex:1;min-width:0;font-family:var(--sans);font-size:var(--step-0);font-weight:400;
+  padding:13px 15px;border:1.5px solid var(--line);border-radius:11px;
+  background:var(--surface-2);color:var(--ink);
+}
+input::placeholder{color:var(--ink-soft);opacity:.85;}
+button{
+  font-family:var(--sans);font-size:var(--step-0);font-weight:600;
+  padding:13px 22px;border:none;border-radius:11px;
+  background:var(--strawberry);color:#FFF8F9;cursor:pointer;
+  transition:transform .12s ease, filter .12s ease;
+}
+button:hover:not(:disabled){filter:brightness(1.06);transform:translateY(-1px);}
+button:active:not(:disabled){transform:translateY(0);}
+button:disabled{background:var(--miss-bg);color:var(--miss-fg);cursor:not-allowed;}
+.ghost{background:transparent;color:var(--ink-soft);border:1.5px solid var(--line);}
+.ghost:hover:not(:disabled){filter:none;background:var(--surface-2);}
+
+.menu{
+  position:absolute;left:16px;right:16px;top:calc(100% - 6px);z-index:20;
+  max-height:280px;overflow-y:auto;
+  background:var(--surface);border:1.5px solid var(--line);border-radius:13px;
+  box-shadow:0 12px 26px var(--shadow);padding:5px;
+}
+.menu ul{margin:0;padding:0;}
+.menu li{
+  list-style:none;padding:9px 12px;border-radius:9px;cursor:pointer;
+  font-weight:400;display:flex;justify-content:space-between;gap:10px;align-items:baseline;
+}
+.menu li .from{color:var(--ink-soft);font-size:var(--step--1);flex:none;}
+.menu li[aria-selected="true"]{background:var(--strawberry-soft);}
+.menu li.used{opacity:.42;cursor:not-allowed;}
+.menu li.used .from{font-style:italic;}
+.menu-note{padding:8px 12px 4px;font-size:var(--step--2);color:var(--ink-soft);
+  letter-spacing:.05em;text-transform:uppercase;font-weight:600;}
+
+.result{padding:24px;text-align:center;}
+.verdict{
+  font-family:var(--display);font-variation-settings:"opsz" 72;
+  font-weight:800;font-size:var(--step-3);line-height:1.05;margin:0 0 4px;
+  letter-spacing:-.02em;text-wrap:balance;
+}
+.answer-name{
+  font-family:var(--display);font-variation-settings:"opsz" 40;
+  font-weight:700;font-size:var(--step-2);color:var(--strawberry);margin:0 0 14px;
+  letter-spacing:-.015em;
+}
+.score{display:inline-flex;align-items:baseline;gap:8px;
+  background:var(--surface-2);border-radius:999px;padding:7px 19px;margin:0 0 18px;}
+.score b{
+  font-family:var(--display);font-variation-settings:"opsz" 30;
+  font-size:var(--step-2);font-weight:700;color:var(--pistachio);font-variant-numeric:tabular-nums;
+}
+.score span{font-size:var(--step--1);letter-spacing:.09em;text-transform:uppercase;
+  font-weight:500;color:var(--ink-soft);}
+.fact{
+  text-align:left;background:var(--surface-2);
+  border-left:4px solid var(--butterscotch);border-radius:0 11px 11px 0;
+  padding:14px 17px;margin:0;font-size:var(--step-0);line-height:1.65;
+}
+.fact + .fact{margin-top:10px;}
+.fact.trivia{border-left-color:var(--strawberry);}
+.fact b{display:block;font-size:var(--step--2);letter-spacing:.12em;
+  text-transform:uppercase;color:var(--ink-soft);margin-bottom:5px;font-weight:600;}
+
+.lastlick{padding:24px;}
+.lastlick h2{
+  font-family:var(--display);font-variation-settings:"opsz" 60;
+  font-weight:800;font-size:var(--step-2);margin:0 0 5px;text-align:center;letter-spacing:-.02em;
+}
+.lastlick .sub{text-align:center;color:var(--ink-soft);font-size:var(--step--1);
+  margin:0 auto 16px;max-width:46ch;}
+.chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:16px;
+  max-height:230px;overflow-y:auto;}
+.chip{
+  font-family:var(--sans);font-size:var(--step--1);font-weight:500;
+  padding:9px 15px;border-radius:999px;
+  background:var(--surface-2);border:1.5px solid var(--line);color:var(--ink);
+  cursor:pointer;transition:transform .12s ease;
+}
+.chip:hover{background:var(--strawberry-soft);border-color:var(--strawberry);transform:translateY(-1px);}
+.chip[aria-pressed="true"]{background:var(--strawberry);border-color:var(--strawberry);color:#FFF8F9;}
+.lastlick .actions{margin-top:16px;}
+
+.stats{padding:24px;}
+.stats h2{font-family:var(--display);font-variation-settings:"opsz" 60;
+  font-weight:700;font-size:var(--step-1);margin:0 0 3px;letter-spacing:-.01em;}
+.stats .note{font-size:var(--step--1);color:var(--ink-soft);margin:0 0 18px;}
+.mine{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px;}
+.mine div{flex:1 1 88px;background:var(--surface-2);border-radius:11px;padding:11px 6px;text-align:center;}
+.mine strong{display:block;font-family:var(--display);font-variation-settings:"opsz" 30;
+  font-size:var(--step-2);font-weight:700;line-height:1.1;font-variant-numeric:tabular-nums;}
+.mine span{font-size:var(--step--2);letter-spacing:.06em;text-transform:uppercase;
+  color:var(--ink-soft);font-weight:500;}
+
+.histlist{display:flex;flex-direction:column;gap:2px;}
+.hrow{display:grid;grid-template-columns:56px 1fr auto 50px;gap:10px;align-items:baseline;
+  padding:9px 11px;border-radius:9px;font-size:var(--step--1);}
+.hrow:nth-child(odd){background:var(--surface-2);}
+.hrow .num{color:var(--ink-soft);font-variant-numeric:tabular-nums;}
+.hrow .nm{font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.hrow .rs{font-size:var(--step--2);text-transform:uppercase;letter-spacing:.05em;font-weight:600;}
+.hrow .rs.ok{color:var(--pistachio);}
+.hrow .rs.save{color:var(--butterscotch);}
+.hrow .rs.gone{color:var(--ink-soft);}
+.hrow .pt{font-weight:600;font-variant-numeric:tabular-nums;text-align:right;}
+.histempty{color:var(--ink-soft);font-size:var(--step--1);padding:6px 2px;}
+
+.actions{display:flex;gap:9px;margin-top:20px;}
+.actions button{flex:1;}
+footer{text-align:center;font-size:var(--step--1);color:var(--ink-soft);
+  padding-top:26px;line-height:1.8;}
+[hidden]{display:none !important;}
+@media (prefers-reduced-motion:reduce){*{animation:none !important;transition:none !important;}}
+@media (max-width:460px){
+  h1{font-size:var(--step-3);}
+  .wrap{padding:0 12px 56px;}
+  .boardfoot{justify-content:center;}
+}
+</style>
+</head>
+<body>
+
+<div class="awning"></div>
+
+<div class="wrap">
+
+  <header class="masthead">
+    <svg width="54" height="64" viewBox="0 0 54 64" aria-hidden="true">
+      <path d="M16 34 L27 61 L38 34 Z" fill="#E8B45F"/>
+      <path d="M18 39 H36 M20.2 45 H33.8 M22.4 51 H31.6" stroke="#BE8B3B" stroke-width="1.5" stroke-linecap="round"/>
+      <circle cx="27" cy="28" r="12" fill="#D9647A"/>
+      <circle cx="20" cy="17" r="9" fill="#FFFCF6"/>
+      <circle cx="34" cy="18" r="8.5" fill="#8FB57A"/>
+      <circle cx="27" cy="9" r="3.8" fill="#C0435C"/>
+    </svg>
+    <h1>The Daily Scoop</h1>
+  </header>
+  <p class="eyebrow" id="eyebrow"></p>
+
+  <div class="stack">
+
+    <div class="archbar" id="archbar" hidden>
+      <span id="archbarText"></span>
+      <button class="ghost" id="backToday">Back to today</button>
+    </div>
+
+    <section class="panel help">
+      <details id="howto">
+        <summary><span class="badge">?</span> How to play</summary>
+        <div class="help-body">
+          <p>Guess a flavour and the six columns will tell you how close you were.</p>
+          <div class="legend">
+            <span class="key k-hit"><i></i>Matched exactly</span>
+            <span class="key k-near"><i></i>Close to it</span>
+            <span class="key k-miss"><i></i>Nowhere near</span>
+          </div>
+          <p>You get six guesses, and getting there early is worth more. If you run out you still get one last pick from whatever is left standing.</p>
+        </div>
+      </details>
+    </section>
+
+    <section class="panel">
+      <div class="board-scroll">
+        <div class="board">
+          <div class="row head">
+            <span>Note</span><span>Colour</span><span>Consistency</span>
+            <span>Source</span><span>Tradition</span><span>Era</span>
+          </div>
+          <div id="rows"></div>
+        </div>
+      </div>
+      <div class="boardfoot">
+        <span class="ticket" id="ticket">
+          <span class="n" id="remainCount">0</span>
+          <span id="remainWord">flavours still fit</span>
+        </span>
+        <span class="legend">
+          <span class="key k-hit"><i></i>Exact</span>
+          <span class="key k-near"><i></i>Close</span>
+          <span class="key k-miss"><i></i>No match</span>
+        </span>
+      </div>
+    </section>
+
+    <section class="panel entry" id="entryPanel">
+      <div class="entry-row">
+        <input type="text" id="guessInput" autocomplete="off" spellcheck="false"
+               placeholder="Name a flavour&hellip;" aria-label="Guess a flavour"
+               role="combobox" aria-expanded="false" aria-controls="menuList">
+        <button id="guessBtn" disabled>Scoop</button>
+      </div>
+      <div class="menu" id="menu" hidden>
+        <p class="menu-note" id="menuNote"></p>
+        <ul id="menuList" role="listbox"></ul>
+      </div>
+    </section>
+
+    <section class="panel lastlick" id="lastLick" hidden>
+      <h2>Last lick</h2>
+      <p class="sub"></p>
+      <div class="chips" id="lickChips"></div>
+      <p class="fact trivia" id="lickFact"></p>
+      <div class="actions"><button id="lickBtn" disabled>Take the last lick</button></div>
+    </section>
+
+    <section class="panel result" id="result" hidden>
+      <p class="verdict" id="verdict"></p>
+      <p class="answer-name" id="answerName"></p>
+      <p class="score"><b id="points">0</b><span>points</span></p>
+      <p class="fact" id="factWhat"></p>
+      <p class="fact trivia" id="factTrivia"></p>
+    </section>
+
+    <section class="panel stats" id="stats" hidden>
+      <h2>Your history</h2>
+      <p class="note" id="histNote"></p>
+      <div class="mine" id="mine"></div>
+      <div class="histlist" id="histlist"></div>
+      <div class="actions">
+        <button id="shareBtn">Copy result</button>
+        <button class="ghost" id="resetBtn">Clear my history</button>
+      </div>
+    </section>
+
+    <section class="panel help">
+      <details id="arch">
+        <summary><span class="badge">&#8634;</span> Archive</summary>
+        <div class="help-body">
+          <p>The last thirty flavours are all still here. Anything you left unfinished is waiting where you left it, and rounds you play from the archive count towards your record but will not extend your streak.</p>
+          <div class="archgrid" id="archgrid"></div>
+        </div>
+      </details>
+    </section>
+
+  </div>
+
+  <section class="panel help deep">
+    <details id="cols">
+      <summary><span class="badge">i</span> How it works</summary>
+      <div class="help-body">
+        <p>Four of the six columns are things you can answer just from having eaten the flavour, and the other two are about where it came from. Here is what each one is actually asking.</p>
+
+        <div class="demo">
+          <p class="demo-cap">Say you guess Vanilla and the answer turns out to be Strawberry</p>
+          <div class="demo-grid" id="demoGrid"></div>
+        </div>
+        <p>Two of them come back green, because both flavours are smooth the whole way through and both are old enough to have existed before freezers did. Everything else misses, since cream is not pink, creamy is not fruity, a vanilla pod is not a fruit, and France is not America.</p>
+
+        <div class="glossary" id="glossary"></div>
+
+        <p><b>Not every flavour can be the answer.</b> <span id="poolLine"></span> The famous ones are left out because people tend to land on them early by accident, and the really obscure ones are left out because it would not be fair to expect anyone to come up with them. Both kinds stay in the book so you can still use them to narrow things down, which is often the smarter play anyway.</p>
+
+        <p><b>The number under the board</b> is how many flavours could still be the answer once everything your guesses have ruled out is taken into account. It is worth watching, because a guess that halves it is usually better than a guess that might be right.</p>
+
+        <p><b>Scoring</b> runs 15, 12, 9, 7, 5 and 3 depending on which guess you got there on. The last lick is worth a single point, and missing altogether is worth nothing.</p>
+
+        <p><b>The flavour of the day</b> is drawn from a fixed shuffled order by counting the days, so everyone playing on the same day gets the same one and it turns over at your local midnight. Nothing comes round again inside a month.</p>
+      </div>
+    </details>
+  </section>
+
+  <footer>
+    A new flavour every day at midnight.<br>
+    <span id="rosterNote"></span>
+  </footer>
+</div>
+
+<script>
+/* The Daily Scoop — flavour book
+   [ name, note, colour, consistency, source, tradition, era, pool, what, trivia ]
+   pool "C" is guessable but too famous to be an answer,
+   pool "D" is guessable but too obscure to be an answer,
+   pool "A" is the answer pool and needs both text fields filled in. */
+window.FLAVOUR_BOOK = [
+
+/* ---------------- too famous to be an answer ---------------- */
+["Vanilla","Creamy","Cream","Smooth","Bean or pod","French","Classic","C","",""],
+["French Vanilla","Creamy","Yellow","Smooth","Dairy","French","Parlour","C","",""],
+["Chocolate","Sweet","Brown","Smooth","Bean or pod","Italian","Classic","C","",""],
+["Milk Chocolate","Sweet","Brown","Smooth","Bean or pod","Central European","Parlour","C","",""],
+["Dark Chocolate","Bitter","Brown","Smooth","Bean or pod","French","Modern","C","",""],
+["Strawberry","Fruity","Pink","Smooth","Fruit","American","Classic","C","",""],
+["Cookies and Cream","Sweet","Cream","Chunky","Confection","American","Modern","C","",""],
+["Cookie Dough","Sweet","Cream","Chunky","Grain","American","Modern","C","",""],
+["Chocolate Chip","Sweet","Cream","Chunky","Bean or pod","American","Parlour","C","",""],
+["Mint Choc Chip","Herbal","Green","Chunky","Leaf","British","Modern","C","",""],
+["Rocky Road","Sweet","Brown","Loaded","Confection","American","Parlour","C","",""],
+["Neapolitan","Sweet","Multi","Layered","Confection","American","Parlour","C","",""],
+["Butter Pecan","Salty","Tan","Chunky","Nut","American","Parlour","C","",""],
+["Coffee","Bitter","Brown","Smooth","Bean or pod","Italian","Classic","C","",""],
+["Pistachio","Toasty","Green","Smooth","Nut","Italian","Classic","C","",""],
+["Salted Caramel","Salty","Brown","Rippled","Confection","French","Modern","C","",""],
+["Caramel","Sweet","Tan","Smooth","Confection","French","Classic","C","",""],
+["Banana","Creamy","Yellow","Smooth","Fruit","American","Parlour","C","",""],
+["Peach","Fruity","Orange","Smooth","Fruit","American","Classic","C","",""],
+["Cherry","Fruity","Red","Chunky","Fruit","American","Parlour","C","",""],
+["Blueberry","Fruity","Blue","Rippled","Fruit","American","Parlour","C","",""],
+["Lemon Sorbet","Tart","Yellow","Icy","Fruit","Italian","Classic","C","",""],
+["Mango Sorbet","Fruity","Orange","Icy","Fruit","South Asian","Classic","C","",""],
+["Raspberry Ripple","Tart","Pink","Rippled","Fruit","British","Parlour","C","",""],
+["Coconut","Creamy","White","Smooth","Nut","SE Asian","Classic","C","",""],
+["Matcha","Bitter","Green","Smooth","Leaf","Japanese","Modern","C","",""],
+["Peanut Butter","Toasty","Tan","Rippled","Nut","American","Parlour","C","",""],
+["Cheesecake","Creamy","Cream","Chunky","Dairy","American","Modern","C","",""],
+["Tiramisu","Bitter","Tan","Layered","Bean or pod","Italian","Modern","C","",""],
+["Dulce de Leche","Sweet","Brown","Rippled","Dairy","Latin American","Classic","C","",""],
+["Stracciatella","Creamy","Cream","Chunky","Confection","Italian","Parlour","C","",""],
+["Birthday Cake","Sweet","White","Chunky","Grain","American","Modern","C","",""],
+["Cake Batter","Sweet","Cream","Smooth","Grain","American","Modern","C","",""],
+["Toffee","Sweet","Tan","Smooth","Confection","British","Classic","C","",""],
+["Honeycomb","Sweet","Tan","Chunky","Confection","British","Parlour","C","",""],
+["Hokey Pokey","Sweet","Cream","Chunky","Confection","Antipodean","Parlour","C","",""],
+["Fudge Ripple","Sweet","Brown","Rippled","Confection","American","Parlour","C","",""],
+["Chocolate Fudge Brownie","Sweet","Brown","Chunky","Grain","American","Modern","C","",""],
+["Moose Tracks","Sweet","Cream","Loaded","Confection","American","Modern","C","",""],
+["S'mores","Sweet","Brown","Loaded","Confection","American","Modern","C","",""],
+["Orange Sherbet","Tart","Orange","Icy","Fruit","American","Parlour","C","",""],
+["Rainbow Sherbet","Fruity","Multi","Layered","Fruit","American","Parlour","C","",""],
+["Banana Split","Sweet","Multi","Loaded","Fruit","American","Parlour","C","",""],
+["Mocha","Bitter","Brown","Smooth","Bean or pod","American","Parlour","C","",""],
+["Espresso Chip","Bitter","Brown","Chunky","Bean or pod","Italian","Modern","C","",""],
+["Peanut Butter Cup","Sweet","Brown","Chunky","Nut","American","Modern","C","",""],
+["Hazelnut","Toasty","Tan","Smooth","Nut","Italian","Classic","C","",""],
+["Almond","Toasty","Cream","Smooth","Nut","Italian","Classic","C","",""],
+["Rum Raisin","Sweet","Cream","Chunky","Fruit","Italian","Classic","C","",""],
+["Maple Walnut","Toasty","Tan","Chunky","Nut","American","Parlour","C","",""],
+["Praline","Toasty","Tan","Chunky","Nut","French","Classic","C","",""],
+["Pralines and Cream","Toasty","Cream","Chunky","Nut","American","Parlour","C","",""],
+["Bubblegum","Sweet","Pink","Chunky","Confection","American","Parlour","C","",""],
+["Candy Floss","Sweet","Pink","Smooth","Confection","American","Modern","C","",""],
+["Marshmallow","Sweet","White","Rippled","Confection","American","Parlour","C","",""],
+["Custard","Creamy","Yellow","Smooth","Dairy","British","Classic","C","",""],
+["Clotted Cream","Creamy","Cream","Smooth","Dairy","British","Classic","C","",""],
+["Sweet Cream","Creamy","Cream","Smooth","Dairy","American","Classic","C","",""],
+["Cinnamon","Herbal","Tan","Smooth","Spice","Central European","Classic","C","",""],
+["Ginger","Herbal","Cream","Smooth","Root","British","Classic","C","",""],
+["Kulfi","Creamy","Cream","Smooth","Dairy","South Asian","Classic","C","",""],
+["Ube","Creamy","Purple","Smooth","Root","SE Asian","Parlour","C","",""],
+["Black Sesame","Toasty","Grey","Smooth","Seed","Japanese","Parlour","C","",""],
+["Green Tea","Bitter","Green","Smooth","Leaf","Japanese","Parlour","C","",""],
+["Mochi","Sweet","White","Chewy","Grain","Japanese","Modern","C","",""],
+["Root Beer Float","Sweet","Brown","Smooth","Root","American","Parlour","C","",""],
+["Blue Moon","Sweet","Blue","Smooth","Confection","American","Parlour","C","",""],
+["Superman","Sweet","Multi","Layered","Confection","American","Parlour","C","",""],
+["Pineapple","Tart","Yellow","Icy","Fruit","American","Parlour","C","",""],
+["Lime","Tart","Green","Icy","Fruit","Latin American","Parlour","C","",""],
+["Watermelon","Fruity","Pink","Icy","Fruit","Middle Eastern","Modern","C","",""],
+
+/* ---------------- the answer pool ---------------- */
+["White Chocolate","Creamy","White","Smooth","Bean or pod","Central European","Parlour","A","Cocoa butter, milk and sugar with none of the brown solids, so it tastes of sweet cream rather than of chocolate.","For decades the United States refused to let it be sold as chocolate at all, because the legal definition required cocoa solids and this has none."],
+["Chocolate Truffle","Sweet","Brown","Chunky","Bean or pod","French","Classic","A","A dense chocolate ganache flavour, richer and softer than plain chocolate, usually with pieces of set ganache running through it.","They are named after the fungus because the first ones were rolled in cocoa powder and came out looking like something dug up from under a tree."],
+["Chocolate Sorbet","Bitter","Brown","Icy","Bean or pod","French","Modern","A","Chocolate made with water instead of milk, which strips out the dairy and leaves the cocoa exposed.","Taking the milk out makes the chocolate taste stronger, not weaker, because milk fat coats your tongue and mutes the cocoa."],
+["Triple Chocolate","Sweet","Brown","Loaded","Bean or pod","American","Modern","A","Dark, milk and white chocolate together in one tub, usually as a base with two kinds of pieces through it.","The three have to be added at different points in the process because they each set at a different temperature, and getting the order wrong turns the white chocolate grainy."],
+["Chocolate Orange","Sweet","Brown","Smooth","Fruit","British","Parlour","A","Chocolate with orange running through it, leaning on the peel rather than the juice for its flavour.","Almost none of an orange's aroma is in the juice. It lives in tiny oil glands in the skin, which is why the smell hits you when you tear the peel and not when you drink it."],
+["Chocolate Mint","Herbal","Brown","Smooth","Leaf","American","Parlour","A","Mint stirred through a chocolate base rather than the other way round, so it reads as chocolate first.","Mint feels cold in your mouth because menthol switches on the same nerve receptors that detect actual cold. Nothing has changed temperature at all."],
+["Chocolate Malt","Toasty","Brown","Smooth","Grain","American","Parlour","A","Chocolate with malted barley powder, which adds a toasty, slightly savoury depth underneath the cocoa.","Malt powder was invented as a health food for infants and invalids, and only became a soda fountain staple because someone worked out it made milkshakes taste far better."],
+["Malted Milk","Toasty","Tan","Smooth","Grain","American","Parlour","A","A pale, biscuity flavour built on malted barley and milk powder, tasting a little like the inside of a malt ball.","The powder was patented in the 1880s as a food for people who could not keep anything else down, and explorers took it to the Antarctic long before anyone put it in a shake."],
+["Butterscotch","Sweet","Tan","Rippled","Confection","British","Parlour","A","A buttery brown sugar sauce rippled through cream, softer and rounder than caramel.","What separates it from caramel is timing. Caramel starts with sugar alone and gets butter later, while butterscotch has the butter and brown sugar in the pan from the beginning."],
+["Sticky Toffee","Sweet","Brown","Chunky","Fruit","British","Modern","A","The British pudding turned into ice cream, with dates and dark toffee sauce through a rich base.","The sweetness comes mostly from dates rather than sugar, and the dates are also why the pudding stays moist for days when an ordinary sponge would go dry."],
+["Bacio","Sweet","Brown","Chunky","Nut","Italian","Parlour","A","Chocolate and hazelnut gelato with pieces of nut through it, named after a Perugian chocolate.","Every one of the chocolates it is named for has a love note folded inside the wrapper, printed in four languages, and the tradition has run since 1922."],
+["Gianduja","Sweet","Brown","Smooth","Nut","Italian","Classic","A","A silky blend of chocolate and hazelnut, the flavour that every chocolate spread on the shelf is imitating.","It exists because of a blockade. Napoleon cut off cocoa imports, so chocolatiers in Turin stretched what little they had with cheap local hazelnuts and accidentally invented something better."],
+["Nougat","Sweet","Cream","Chunky","Nut","French","Classic","A","Whipped honey and egg white with almonds through it, chewy and floral rather than simply sweet.","The version from Montélimar is protected by law, and to use the name it has to contain at least thirty percent almonds and a set proportion of lavender honey."],
+["Marzipan","Toasty","Cream","Smooth","Nut","Central European","Classic","A","Ground almond and sugar, sweet and slightly bitter, the flavour of the paste under a Christmas cake.","Lübeck has guarded its recipe since the Middle Ages, and local legend claims the city invented it during a siege when almonds and sugar were the only food left in the stores."],
+["Turron","Toasty","Tan","Chunky","Nut","Iberian","Classic","A","The Spanish almond nougat, honeyed and either hard and brittle or soft and fudgy depending on the style.","The hard Alicante version is close to two thirds almonds by weight and is held together with nothing but honey and egg white, with no flour or sugar syrup at all."],
+["Peanut Brittle","Toasty","Tan","Chunky","Nut","American","Parlour","A","Shards of hard, salty peanut candy through a sweet base.","The bubbles that make it snap instead of shatter your teeth come from bicarbonate of soda, which foams the molten sugar and fills it with air pockets."],
+["Jelly Bean","Sweet","Multi","Chunky","Confection","American","Parlour","A","A mix of bright fruit sweetness with small chewy pieces through it.","The hard shell is put on by tumbling the sweets in a rotating drum for several days, a technique borrowed directly from the pharmaceutical industry's method for coating pills."],
+["Red Velvet","Sweet","Red","Chunky","Grain","American","Modern","A","Mild cocoa cake with cream cheese, more tangy than chocolatey, with pieces of sponge through it.","The original red had nothing to do with food colouring. It came from a real chemical reaction between raw cocoa and buttermilk, and modern processed cocoa no longer does it."],
+["Snickerdoodle","Herbal","Cream","Chunky","Grain","American","Modern","A","Cinnamon sugar cookie flavour, with a faint sourness underneath and biscuit pieces through it.","The tang that makes it different from an ordinary cinnamon biscuit is cream of tartar, which is a by-product of winemaking scraped off the inside of the barrels."],
+["Biscoff","Toasty","Tan","Rippled","Grain","Central European","Modern","A","Caramelised spiced biscuit blended into a smooth paste and rippled through the base.","It became famous worldwide almost entirely because one airline handed out the biscuits free with coffee, and people started asking where they could buy them."],
+["Brownie Batter","Sweet","Brown","Smooth","Grain","American","Modern","A","Raw brownie mix in ice cream form, denser and fudgier than plain chocolate.","Selling raw batter only became legal once companies started heat treating the flour, because the real risk was never the eggs but bacteria living in the wheat."],
+["Raspberry","Tart","Red","Rippled","Fruit","British","Classic","A","Sharp red berry sauce rippled through cream, more acidic than strawberry.","A raspberry is not a berry. It is a cluster of dozens of tiny individual fruits fused together around a hollow core, which is why it collapses when you pick it."],
+["Blackberry","Tart","Purple","Rippled","Fruit","British","Classic","A","Deep, winey and slightly tannic, darker in flavour than raspberry and less sweet.","Nobody has ever needed to farm it seriously in Britain because it grows wild in every hedgerow, and it is one of the few fruits most people have picked for free."],
+["Boysenberry","Fruity","Purple","Rippled","Fruit","Antipodean","Parlour","A","A big, jammy dark berry, sweeter than blackberry with a slight raspberry sharpness.","It is a cross of four different berries and it nearly went extinct. Every plant alive descends from a handful of dying vines rescued from an abandoned Californian farm in the 1920s."],
+["Blackcurrant","Tart","Purple","Icy","Fruit","British","Parlour","A","Intensely sharp and perfumed, the flavour of the purple cordial rather than of any fresh fruit most people have eaten.","It was banned across much of the United States for most of the twentieth century because the plants carried a disease that was killing commercial pine forests."],
+["Cranberry","Tart","Red","Icy","Fruit","American","Parlour","A","Very sharp and slightly bitter, usually sweetened heavily to be edible at all.","They are harvested by flooding the entire field. Ripe berries have four air pockets inside and float to the surface, while unripe ones sink and get left behind."],
+["Gooseberry","Tart","Green","Rippled","Fruit","British","Classic","A","Sour green fruit with a grape-like skin, tasting somewhere between apple and elderflower once cooked.","They are sharp enough raw to make your jaw ache, and Victorian growers held competitions for the heaviest single berry that are still running in parts of northern England."],
+["Rhubarb","Tart","Pink","Rippled","Root","British","Classic","A","Sharp, tangy pink stalks cooked down with sugar, tasting faintly of sour apple.","The stalks are fine but the leaves are genuinely poisonous, and during the First World War people were told to eat them as a vegetable, which made a number of them very ill."],
+["Rhubarb and Custard","Tart","Pink","Rippled","Root","British","Parlour","A","Sharp rhubarb rippled through a rich vanilla custard, the flavour of the boiled sweet.","The best rhubarb is grown in the dark in heated sheds and picked by candlelight, because any real light would turn the stalks green and tough."],
+["Apricot","Fruity","Orange","Icy","Fruit","French","Classic","A","Soft, honeyed stone fruit, gentler and more floral than peach.","The kernel inside the stone tastes strongly of almond, and a couple of them crushed into the mix is an old trick for making the apricot taste more like itself."],
+["Nectarine","Fruity","Orange","Icy","Fruit","Chinese","Classic","A","A peach without the fuzz, slightly firmer and a little sharper.","It is not a hybrid or a cross. It is genetically a peach with a single gene switched off, and a peach tree can spontaneously produce nectarines on one branch."],
+["Plum","Tart","Purple","Icy","Fruit","Chinese","Classic","A","Sharp dark fruit with a slightly tannic skin, more sour than a supermarket plum suggests.","Salted and dried, the same fruit becomes a savoury snack eaten across East Asia that tastes so unlike the fresh version that most people never connect the two."],
+["Pear","Fruity","Cream","Icy","Fruit","French","Modern","A","Delicate, floral and grainy, much subtler than apple.","Pears are picked hard and ripen from the inside out, so by the time the outside feels ready the centre has often already turned to mush."],
+["Green Apple","Tart","Green","Icy","Fruit","French","Modern","A","Sharp, bright and slightly sour, closer to the sweet than to a whole apple.","Nearly all the aroma sits in the skin rather than the flesh, which is why a peeled apple tastes so much blander than a whole one."],
+["Apple Pie","Sweet","Cream","Chunky","Fruit","American","Parlour","A","Cinnamon apple with pieces of pastry through a vanilla base.","The pastry has to go in already frozen and in large pieces, because anything small or warm dissolves into wet paste within a day of being in the tub."],
+["Apple Crumble","Sweet","Tan","Chunky","Grain","British","Parlour","A","Baked apple with buttery crumble pieces through a custardy base.","The crumble topping is a wartime invention. Rationing made a proper pastry lid impossible, so cooks rubbed the little fat and flour they had into a rubble and scattered it on top."],
+["Cantaloupe","Fruity","Orange","Icy","Fruit","French","Classic","A","Soft, musky orange melon, sweet and slightly perfumed.","It is named after a papal estate outside Rome where the seeds were first planted in Europe after arriving from Armenia."],
+["Mandarin","Fruity","Orange","Icy","Fruit","Chinese","Classic","A","Sweet, gentle citrus with less acid than orange.","Almost every sweet orange on earth is descended from crossing this with a pomelo, which makes it one of the two ancestors of nearly all citrus fruit."],
+["Grapefruit","Tart","Pink","Icy","Fruit","American","Modern","A","Sharp citrus with a distinct bitter edge that lingers after the sweetness goes.","It appeared by accident in Barbados as a natural cross, and its bitterness comes from the same family of compounds that gives tonic water its flavour."],
+["Blood Orange Sorbet","Tart","Red","Icy","Fruit","Italian","Modern","A","Deep red citrus, sharper than orange with a faint raspberry note.","The red only develops if the nights get cold enough while the fruit is on the tree, which is why the good ones come from around Mount Etna and why the colour varies year to year."],
+["Yuzu","Tart","Yellow","Icy","Fruit","Japanese","Modern","A","Intensely aromatic Japanese citrus, somewhere between lime, grapefruit and mandarin.","There is so little juice inside and so many seeds that it is grown almost entirely for its peel, and the whole fruits are floated in hot baths at the winter solstice."],
+["Lemon Meringue","Sweet","Yellow","Loaded","Fruit","American","Parlour","A","Sharp lemon curd with crisp meringue pieces through a sweet base.","The meringue has to be baked bone dry and folded in frozen, because any moisture left inside it turns the pieces into sugar syrup overnight."],
+["Raspberry Sorbet","Tart","Red","Icy","Fruit","French","Classic","A","Pure sharp raspberry with no dairy, more intense than the rippled version.","Sieving out the seeds costs about a third of the fruit by weight, which is a large part of why a good raspberry sorbet is expensive."],
+["Passionfruit Sorbet","Tart","Yellow","Icy","Fruit","Latin American","Modern","A","Extremely sharp, floral and tropical, with a perfume that arrives before the sourness.","The pulp is acidic enough to curdle milk on contact, which is the practical reason you almost never see it made with dairy."],
+["Guava","Fruity","Pink","Icy","Fruit","Latin American","Classic","A","Sweet, musky and heavily perfumed, somewhere between pear and strawberry.","The pink-fleshed kind is far more aromatic than the white, and the fruit contains several times more vitamin C by weight than an orange."],
+["Papaya","Fruity","Orange","Icy","Fruit","Latin American","Modern","A","Mild, soft and faintly musky, gentler than mango.","It contains an enzyme so good at breaking down protein that it is sold commercially as meat tenderiser, and it will slowly digest gelatine out of any dessert it is set into."],
+["Acai","Tart","Purple","Icy","Fruit","Latin American","Modern","A","Dark, earthy and barely sweet, closer to blackberry crossed with cocoa than to any other berry.","On its own it is so unsweet that it is traditionally eaten in Brazil as a savoury dish alongside fish and cassava, not as a dessert."],
+["Dragonfruit","Fruity","Pink","Icy","Fruit","SE Asian","Modern","A","Very mild and lightly sweet, with a texture like kiwi and far less flavour than the colour promises.","The plant is a cactus that flowers for a single night and has to be pollinated by bats or moths before dawn, which is why many farms pollinate every flower by hand."],
+["Lychee","Fruity","White","Icy","Fruit","Chinese","Modern","A","Intensely floral and perfumed, sweet with a slight grapey sharpness.","Most of the perfume vanishes within a day of picking, which is why tinned lychees taste so different and why a fresh one straight off the tree is a genuinely different fruit."],
+["Jackfruit","Fruity","Yellow","Smooth","Fruit","SE Asian","Modern","A","Sweet and heavily aromatic, tasting oddly like a mixture of banana, pineapple and bubblegum.","It is the largest fruit that grows on any tree, with single ones reaching forty kilos, and unripe it is cooked as a meat substitute that tastes nothing like the ripe version."],
+["Durian","Creamy","Yellow","Smooth","Fruit","SE Asian","Modern","A","Rich, custardy and sweet, with a smell that people either love or find genuinely unbearable.","It is banned on the Singapore metro and in many hotels, and the smell comes from a mix of compounds that separately smell of onion, rotten egg and honey."],
+["Kiwifruit","Tart","Green","Icy","Fruit","Antipodean","Modern","A","Sharp, green and slightly grassy, more acidic than most people remember.","It contains an enzyme that dissolves protein, so a kiwi dairy base will slowly turn to liquid if it sits too long, and the same enzyme is why eating a lot makes your tongue tingle."],
+["Banoffee","Sweet","Tan","Loaded","Fruit","British","Modern","A","Banana and toffee together with biscuit pieces through cream.","It was invented in one specific Sussex restaurant in 1971, and the owners still have the original sign outside claiming it, which nobody has successfully disputed."],
+["Strawberry Cheesecake","Fruity","Pink","Loaded","Dairy","American","Modern","A","Tangy cream cheese base with strawberry ripple and biscuit pieces.","Three different textures in one tub makes it one of the hardest flavours to keep stable, because the biscuit absorbs moisture from the fruit and goes soft long before the rest spoils."],
+["Peach Melba","Fruity","Pink","Rippled","Fruit","French","Classic","A","Peach and raspberry together over vanilla, the classic French dessert in frozen form.","Escoffier created it for the opera singer Nellie Melba at the Savoy and originally served it on an ice sculpture of a swan, because he thought a plain bowl was beneath the occasion."],
+["Cherry Pie","Fruity","Red","Loaded","Fruit","American","Parlour","A","Sour cherries and pastry pieces through a sweet base.","Bakers use sour cherries almost exclusively, because sweet ones lose all their definition when cooked and turn to flavourless mush."],
+["Black Cherry","Fruity","Purple","Chunky","Fruit","Central European","Parlour","A","Deep, dark and slightly almondy, richer than red cherry.","Cherry stones contain a compound that breaks down into the same chemical that makes almonds taste of almond, which is why dark cherry and marzipan taste so natural together."],
+["Black Forest","Sweet","Brown","Loaded","Fruit","Central European","Parlour","A","Chocolate, cherries and cream together, based on the German cake.","In Germany the cake is legally required to contain kirsch, the cherry spirit, and a version without it cannot be sold under the name."],
+["Eton Mess","Sweet","Pink","Loaded","Fruit","British","Modern","A","Broken meringue, strawberries and cream, deliberately untidy.","The story is that a dog sat on a picnic basket at Eton, crushing a strawberry pavlova, and the result was served anyway and turned out to be better than the original."],
+["Mixed Berry","Tart","Purple","Rippled","Fruit","Nordic","Parlour","A","Several dark berries together, sharper and more complex than any one of them alone.","This flavour only became possible because of freezing. No two of the berries in it are ever ripe at the same time, so before freezers you could never have combined them."],
+["Tutti Frutti","Fruity","Cream","Chunky","Fruit","Italian","Parlour","A","A crowded mix of candied fruit pieces through a sweet base.","The name simply means all fruits, which is an unusually honest piece of naming for something that has since come to mean anything colourful and vaguely fruity."],
+["Champagne Sorbet","Tart","Cream","Icy","Fruit","French","Classic","A","Dry, faintly yeasty and barely sweet, served between courses rather than as a dessert.","Alcohol lowers the freezing point, so it never sets properly hard, which is exactly why it works as a palate cleanser and why you cannot make a scoopable one."],
+["Hibiscus","Tart","Red","Icy","Flower","Latin American","Modern","A","Sharp, cranberry-like and floral, deep red and very sour.","The part used is not the petal but the fleshy calyx left behind after the flower drops, and it stains anything it touches so permanently that it is used as a dye."],
+["Walnut","Toasty","Tan","Chunky","Nut","French","Classic","A","Rich, slightly bitter nut pieces through a creamy base.","The bitterness sits entirely in the papery skin, and it gets stronger with age, which is why old walnuts taste faintly of pencil shavings."],
+["Pecan","Toasty","Tan","Chunky","Nut","American","Parlour","A","Buttery, sweet nut pieces, softer and less bitter than walnut.","It is the only major tree nut native to North America, and wild pecans were a staple food across the continent for thousands of years before anyone farmed them."],
+["Cashew","Creamy","Cream","Smooth","Nut","South Asian","Modern","A","Mild, buttery and slightly sweet, gentler than almond.","It grows on the outside of a fruit, hanging underneath it like a comma, and the shell is so caustic that it has to be roasted before anyone can safely touch it."],
+["Macadamia","Creamy","Cream","Chunky","Nut","Antipodean","Modern","A","Very rich, buttery and mild, with a soft crunch rather than a hard snap.","It is native to Australia but was commercialised in Hawaii, which is why most people assume it is Hawaiian, and it is one of the hardest nuts in the world to crack."],
+["Chestnut","Toasty","Tan","Smooth","Nut","French","Classic","A","Sweet, starchy and earthy, closer to sweet potato than to any other nut.","It is technically a nut but behaves like a vegetable, containing almost no fat and a great deal of starch, which is why it can be roasted and eaten hot in a way almonds cannot."],
+["Amaretto","Toasty","Cream","Smooth","Nut","Italian","Classic","A","Sweet almond liqueur flavour with a distinct bitter edge.","The bitter almond note usually comes from apricot kernels rather than almonds, because the kernels are cheaper and taste more strongly of almond than almonds do."],
+["Baklava","Sweet","Tan","Chunky","Nut","Middle Eastern","Modern","A","Honeyed pastry and chopped nuts through a rich base.","The pastry has to be folded in at the last possible moment, because syrup and frozen dairy will turn every crisp shard into paste within hours."],
+["Halva","Toasty","Tan","Chunky","Seed","Middle Eastern","Classic","A","Sesame paste and sugar, nutty and slightly savoury, with a crumbly texture.","It is pulled and folded like taffy while still warm, which creates the fibrous seams that make a good one flake apart rather than crumble."],
+["Tahini","Toasty","Tan","Smooth","Seed","Middle Eastern","Modern","A","Ground sesame, rich and savoury with a bitter finish, more nutty than sweet.","Unsweetened it is closer to a savoury paste than a dessert, and it needs salt as much as sugar, which is why the best versions taste almost like a nut butter."],
+["Poppy Seed","Toasty","Grey","Chunky","Seed","Central European","Classic","A","Nutty, faintly bitter grey-black seed paste through a sweet base.","The seeds are ground with milk into a paste in a special hand mill, a technique that is older across Central Europe than ice cream itself."],
+["Red Bean","Sweet","Purple","Chunky","Seed","Japanese","Classic","A","Sweetened adzuki beans, earthy and mildly sweet, with whole beans through a smooth base.","Beans as dessert sounds strange in the West but predates sugar in East Asia, and adzuki paste has been the standard sweet filling there for over a thousand years."],
+["Rice Pudding","Creamy","Cream","Chunky","Grain","Iberian","Classic","A","Sweet cinnamon rice with soft grains through a milky base.","The starch that leaches out of the rice does exactly the same job that commercial stabilisers do in a modern tub, which is why it stays creamy without any additives."],
+["Panettone","Sweet","Cream","Chunky","Grain","Italian","Classic","A","Sweet candied fruit and buttery bread pieces through a light base.","The loaf it comes from has to be hung upside down to cool for hours, because if it cools upright the crumb collapses under its own weight."],
+["Christmas Pudding","Herbal","Brown","Chunky","Fruit","British","Parlour","A","Dark spiced dried fruit soaked in spirit, dense and boozy.","The pudding it comes from keeps for a year or more, and the reason is the alcohol, which soaks the fruit thoroughly enough to stop anything growing in it."],
+["Churro","Sweet","Tan","Chunky","Grain","Iberian","Modern","A","Fried cinnamon sugar dough pieces through a sweet base.","The ridges are not decoration. They increase the surface area so the outside crisps before the inside has time to go greasy, and a smooth one comes out soggy."],
+["Waffle","Toasty","Tan","Chunky","Grain","Central European","Parlour","A","Toasted, faintly caramelised batter pieces through a vanilla base.","The ice cream cone was invented at a World's Fair when a stall ran out of dishes and the waffle seller next door rolled one up to help out."],
+["Doughnut","Sweet","Tan","Chunky","Grain","American","Parlour","A","Fried, sugary dough pieces through a sweet base.","The hole exists for a practical reason. Without it the middle stays raw while the outside burns, and early ring-shaped ones were the fix rather than a style choice."],
+["French Toast","Sweet","Tan","Chunky","Grain","French","Modern","A","Eggy cinnamon bread pieces through a custard base.","The French name for it translates as lost bread, which says plainly what it was invented to rescue, and versions of the dish are recorded in Roman cookbooks."]
+,
+["Ricotta","Creamy","White","Chunky","Dairy","Italian","Classic","A","Fresh, milky and only lightly sweet, often with candied peel and chocolate through it.","The name means recooked, because it is made from the whey left over after another cheese has already been made, which makes it a by-product rather than a cheese in its own right."],
+["Mascarpone","Creamy","Cream","Smooth","Dairy","Italian","Modern","A","Extremely rich and mild, more like sweetened cream than cheese.","It is set with acid rather than rennet and has no culture added, which means that technically it is not a cheese at all."],
+["Panna Cotta","Creamy","Cream","Smooth","Dairy","Italian","Modern","A","Clean, milky and vanilla-scented, the frozen version of the set cream dessert.","The dessert it copies is barely held together on purpose. A good one is set with the smallest amount of gelatine that will let it stand up, so it wobbles when the plate moves."],
+["Creme Brulee","Sweet","Yellow","Chunky","Dairy","French","Modern","A","Rich egg custard with shards of burnt sugar through it.","The sugar shards have to be added frozen and eaten quickly, because caramel is hygroscopic and will pull moisture out of the ice cream until it dissolves completely."],
+["Tres Leches","Creamy","Cream","Chunky","Dairy","Latin American","Modern","A","Milky sponge cake pieces through a very rich, sweet base.","The cake is soaked in evaporated milk, condensed milk and cream, and it works because the sponge is baked deliberately dry so it can absorb far more than its own weight."],
+["Condensed Milk","Sweet","Cream","Smooth","Dairy","SE Asian","Parlour","A","Intensely sweet cooked milk, thick and caramelised at the edges.","It took hold across Southeast Asia and Latin America precisely because it needs no refrigeration, which made it the only usable dairy in hot countries before fridges were common."],
+["Frozen Yoghurt","Tart","White","Smooth","Dairy","American","Modern","A","Sharp and light, tangier and less fatty than ice cream.","It has boomed and collapsed twice, once in the eighties and once in the two thousands, and both times for the same reason: shops opened faster than people wanted to eat it."],
+["Greek Yoghurt","Tart","White","Smooth","Dairy","Middle Eastern","Modern","A","Thick, sour and rich, more assertive than ordinary frozen yoghurt.","Straining removes most of the whey, so it takes roughly four times as much milk to produce the same weight, and the discarded whey is a genuine disposal problem for producers."],
+["Egg Nog","Creamy","Yellow","Smooth","Spice","American","Parlour","A","Rich spiced custard with nutmeg and a hint of spirit.","Dairies treat it as a six week product and then stop entirely, which is why you can never find it in March no matter how much you want it."],
+["Goat Cheese","Salty","White","Rippled","Dairy","French","Modern","A","Tangy and faintly barnyard, with honey usually rippled through to balance it.","The distinctive smell comes from a fatty acid that your nose reads as animal when warm but as clean and bright when cold, which is exactly why it works frozen."],
+["Cheese","Salty","Orange","Smooth","Dairy","SE Asian","Parlour","A","Sweet and salty at once, made with processed cheese, a Filipino freezer staple.","It is sold from brightly painted wooden carts by vendors known locally as sorbeteros, and the combination of sweet and salty is the whole point rather than an accident."],
+["Basque Cheesecake","Toasty","Tan","Chunky","Dairy","Iberian","Modern","A","Caramelised, slightly burnt cheesecake with a molten centre.","It is baked deliberately too hot so the top scorches, and the recipe was published freely by the San Sebastián bar that invented it rather than kept secret."],
+["Hojicha","Toasty","Brown","Smooth","Leaf","Japanese","Modern","A","Roasted green tea, nutty and toasty with almost no bitterness.","Roasting burns off most of the caffeine, which is why it is the tea given to children and to people last thing at night in Japan."],
+["Earl Grey","Herbal","Grey","Smooth","Leaf","British","Modern","A","Black tea scented with bergamot, floral and slightly perfumed.","Bergamot is a bitter citrus that is almost inedible as a fruit and is grown commercially on one small stretch of the Calabrian coast, largely for this one purpose."],
+["Milk Tea","Creamy","Tan","Smooth","Leaf","Chinese","Modern","A","Strong black tea with evaporated milk, smooth and slightly astringent.","Hong Kong's version is strained repeatedly through a cloth bag that stains a permanent dark brown, which is why it is nicknamed pantyhose tea."],
+["Thai Tea","Creamy","Orange","Smooth","Leaf","SE Asian","Modern","A","Sweet spiced tea with condensed milk, bright orange and heavily perfumed.","The orange colour has nothing to do with the tea. It is food dye, and it has been part of the standard recipe for so long that the drink looks wrong without it."],
+["Chai","Herbal","Tan","Smooth","Spice","South Asian","Modern","A","Milky black tea heavy with ginger, cardamom and cinnamon.","There is no fixed recipe. Every household mixes its own spices, and asking for chai tea in India is asking for tea tea."],
+["Jasmine","Herbal","Cream","Smooth","Flower","Chinese","Modern","A","Delicately floral and perfumed, sweet without being sugary.","The tea is not flavoured with anything. Fresh blossoms are laid beside the dry leaves overnight so the leaves absorb the scent, and the flowers are then thrown away."],
+["Sakura","Herbal","Pink","Smooth","Flower","Japanese","Modern","A","Cherry blossom, floral and faintly almondy with a savoury edge.","The blossoms are pickled in salt and plum vinegar before use, which is why the flavour always arrives with a slight saltiness that surprises people expecting sweetness."],
+["Rose","Herbal","Pink","Smooth","Flower","Middle Eastern","Classic","A","Perfumed and floral, the taste of rose water rather than of a fresh flower.","There is a very narrow window between fragrant and soapy, and a few drops too many of rose water will ruin an entire batch beyond rescue."],
+["Orange Blossom","Herbal","Cream","Smooth","Flower","Middle Eastern","Classic","A","Softly floral and citrusy, gentler than rose.","It is distilled from the flowers of the bitter orange tree, the same tree that gives us marmalade oranges, so one plant produces two completely different flavours."],
+["Lavender","Herbal","Purple","Smooth","Flower","French","Modern","A","Floral and slightly medicinal, closer to honey than to perfume when done well.","Culinary lavender is a different variety bred to be low in camphor, which is the compound responsible for the soapy taste when the wrong kind is used."],
+["Elderflower","Herbal","Cream","Icy","Flower","British","Modern","A","Lightly floral and honeyed, with a faint muscat grape note.","The blossoms have to be picked dry on a sunny morning and used the same day, because once they get damp the perfume turns unpleasantly animal."],
+["Chamomile","Herbal","Yellow","Smooth","Flower","French","Modern","A","Soft, hay-like and faintly apple-scented.","The Greek name for the plant means earth apple, which is a fair description, because the flowers genuinely do smell of apples when crushed."],
+["Saffron","Herbal","Yellow","Smooth","Flower","Middle Eastern","Classic","A","Warm, honeyed and slightly metallic, with a deep yellow colour.","Each crocus produces exactly three threads and every one is picked by hand, which is why it costs more by weight than almost anything else in a kitchen."],
+["Cardamom","Herbal","Cream","Smooth","Spice","South Asian","Classic","A","Warm, citrusy and slightly camphorous, the defining spice of Indian sweets.","The pods have to be cracked and steeped whole because ground cardamom loses most of its oils within a few weeks of grinding."],
+["Nutmeg","Herbal","Cream","Smooth","Spice","Middle Eastern","Classic","A","Warm, woody and sweet, the spice on top of a custard tart.","Two different spices come off the same seed. The lacy red webbing around the outside is mace, and it is milder and more floral than the kernel inside."],
+["Gingerbread","Herbal","Brown","Chunky","Spice","Central European","Parlour","A","Dark, spiced and molasses-heavy with soft biscuit pieces through it.","Nuremberg has made its version since the 1300s and it is protected by name, with the guild recipe requiring almost no flour at all."],
+["Pumpkin Spice","Herbal","Orange","Smooth","Spice","American","Modern","A","Warm cinnamon, ginger, nutmeg and clove in a smooth base.","There is no pumpkin in the spice blend and there never was. It is named for what you put it in, in the same way mixed spice or curry powder is."],
+["Mint","Herbal","White","Smooth","Leaf","Middle Eastern","Classic","A","Clean, cooling fresh mint with no colouring and nothing through it.","Without the dye and the chocolate chips it tastes far closer to the mint sherbets served across the Levant than to anything in a supermarket freezer."],
+["Basil","Herbal","Green","Smooth","Leaf","Italian","Modern","A","Sweet, peppery and aniseed-like, more interesting than it sounds.","The leaves have to be blanched and shocked in ice water first, because otherwise an enzyme turns the whole batch a dull brown within a day."],
+["Pandan","Herbal","Green","Smooth","Leaf","SE Asian","Parlour","A","Grassy, vanilla-like and slightly coconutty, bright green and very fragrant.","It is often called the vanilla of Southeast Asia, and the leaves are knotted and steeped whole then pulled back out, because nobody eats them."],
+["Mojito","Herbal","Green","Icy","Leaf","Latin American","Modern","A","Sharp lime and fresh mint, cold and clean rather than sweet.","The mint has to be bruised rather than chopped, because cutting the leaves releases compounds that turn the whole thing bitter within minutes."],
+["Turkish Delight","Herbal","Pink","Chewy","Flower","Middle Eastern","Classic","A","Rose-scented and chewy, floral and very sweet.","It is set with starch rather than gelatine, which is what gives it that particular resistant bite, and the technique predates gelatine by several centuries."],
+["Honey","Sweet","Tan","Smooth","Flower","Middle Eastern","Classic","A","Floral and rounded, sweeter and more complex than sugar.","Honey never fully freezes, so a tub made with it stays noticeably softer and more scoopable straight from the freezer than one made with sugar alone."],
+["Taro","Creamy","Purple","Smooth","Root","SE Asian","Parlour","A","Starchy, nutty and mildly sweet, with a faint vanilla note.","It is barely purple on its own and most of the colour you see has been added, and raw taro is mildly toxic until it is properly cooked."],
+["Sweet Potato","Creamy","Orange","Smooth","Root","Japanese","Modern","A","Sweet, earthy and dense, closer to caramel than to a vegetable.","The Japanese variety is drier and considerably sweeter than the orange kind, and roasting it converts its starch into sugar, which is why roasted tastes twice as sweet as boiled."],
+["Pumpkin","Herbal","Orange","Smooth","Root","American","Modern","A","Mildly sweet and spiced, more about the cinnamon and clove than the squash.","Almost all of the flavour people recognise comes from the spice rather than the vegetable, and blind tastings routinely fail to detect whether any pumpkin is present."],
+["Corn","Sweet","Yellow","Chunky","Grain","Latin American","Parlour","A","Sweet, milky and slightly savoury, with whole kernels through it.","Mexican street versions lean on the same chilli, lime and cheese that go on a grilled cob, which turns it into something closer to a snack than a dessert."],
+["Avocado","Creamy","Green","Smooth","Fruit","Latin American","Parlour","A","Rich, buttery and only lightly sweet, more like a mousse than a sorbet.","It is fatty enough to set almost like custard with no cream at all, and it is botanically a berry, which surprises almost everyone."],
+["Liquorice","Herbal","Grey","Smooth","Root","Nordic","Classic","A","Dark, aniseed-heavy and intensely sweet with a long finish.","The root is around fifty times sweeter than sugar, but the sweetness arrives late and then refuses to leave, which is why the flavour divides people so sharply."],
+["Baileys","Creamy","Tan","Smooth","Bean or pod","British","Modern","A","Creamy Irish whiskey liqueur, sweet with a cocoa and coffee edge.","Cream and whiskey separate on contact, and the real invention was not the recipe but the emulsifier that stops them splitting, which took years to get right."],
+["Whisky","Toasty","Tan","Smooth","Grain","British","Modern","A","Smoky, oaky and warming, more savoury than sweet.","Peat smoke survives freezing better than nearly any other flavour because the compounds carrying it are oil based rather than water based."],
+["Bourbon","Toasty","Tan","Smooth","Grain","American","Modern","A","Sweet, vanilla-heavy and caramelised, softer than scotch.","American law requires a brand new charred oak barrel every single time, which is why it leans so heavily on vanilla and why used barrels get shipped abroad by the thousand."],
+["Rum","Sweet","Tan","Smooth","Grain","Latin American","Classic","A","Warm, molasses-sweet and slightly spiced.","It is made from molasses, which was the waste product nobody wanted from sugar refining, so the entire drink exists because someone tried to use up rubbish."],
+["Limoncello","Tart","Yellow","Icy","Fruit","Italian","Modern","A","Intensely lemony and sweet, sharper than lemon sorbet.","Only the peel goes in and never the pith, because any white left on the skin turns the whole batch bitter within a week of steeping."],
+["Pina Colada","Creamy","White","Smooth","Fruit","Latin American","Parlour","A","Coconut and pineapple together, creamy and tropical.","Fresh pineapple contains an enzyme that stops dairy setting and will curdle cream outright, so the fruit has to be cooked first for the flavour to work at all."],
+["Margarita","Tart","Green","Icy","Fruit","Latin American","Modern","A","Sharp lime with a salted edge, cold and clean.","The salt on the rim is not decoration. It suppresses your perception of bitterness, which makes the lime taste noticeably sweeter than it actually is."],
+["Sake","Creamy","White","Smooth","Grain","Japanese","Modern","A","Clean, faintly fruity and slightly savoury rice wine.","It is brewed rather than distilled, and it needs a mould to convert the rice starch to sugar before the yeast can do anything, which makes it closer to beer than to wine."],
+["Kahlua","Bitter","Brown","Smooth","Bean or pod","Latin American","Modern","A","Sweet coffee liqueur, dark and rounded.","The coffee and the rum in it both come from Mexico, which is less of a coincidence than it sounds given that it was invented there to use both."],
+["Olive Oil","Herbal","Yellow","Smooth","Fruit","Italian","Modern","A","Grassy, peppery and faintly bitter, savoury rather than sweet.","A good oil finishes with a catch at the back of your throat that makes you cough, and in Italy that cough is treated as a sign of quality rather than a fault."],
+["Sea Salt","Salty","White","Smooth","Spice","French","Modern","A","Clean and mineral, with crunchy flakes through a sweet cream base.","Flaked salt is used rather than fine because the crystals survive the churn and still crunch, while fine salt simply dissolves and makes everything taste faintly of seawater."],
+["Miso Caramel","Salty","Tan","Rippled","Bean or pod","Japanese","Modern","A","Caramel with fermented soybean paste, salty and deeply savoury.","Miso does the job salt does in salted caramel but adds a meaty depth that salt cannot, because fermentation has already broken the soy down into glutamates."],
+["Parmesan","Salty","Cream","Smooth","Dairy","Italian","Modern","A","Sharp, nutty and salty, more savoury than any other flavour here.","Aged parmesan is full of crunchy white crystals that are the same kind of crystal you find in good caramel, and they survive the churn intact."],
+["Halo Halo","Sweet","Multi","Loaded","Fruit","SE Asian","Parlour","A","A crowded mixture of sweet beans, jellies, fruit and milk.","The name literally means mix mix, and the instruction is meant seriously, because everything in it is supposed to be stirred together before you eat any of it."],
+["Brown Sugar Boba","Sweet","Tan","Chunky","Confection","Chinese","Modern","A","Dark caramelised sugar syrup with chewy tapioca pearls through it.","The pearls are pure tapioca starch, which goes stubbornly hard when properly frozen, so the ones in ice cream have to be cooked in syrup to keep them soft."],
+["Bingsu","Sweet","White","Icy","Dairy","Korean","Modern","A","Fine shaved frozen milk, light and powdery rather than crunchy.","The ice is shaved from frozen milk rather than water, which is why it collapses on your tongue instead of crunching like a snow cone."],
+["Semifreddo","Creamy","Cream","Smooth","Dairy","Italian","Classic","A","Light, mousse-like and only half frozen, softer than ice cream.","It holds enough whipped cream and egg to stay soft in a domestic freezer without any churning at all, which is why it was the home cook's version before machines existed."],
+["Granita","Tart","Red","Icy","Fruit","Italian","Classic","A","Coarse, crunchy ice crystals with sharp fruit, closer to a drink than a dessert.","It is stirred by hand as it freezes specifically to keep the crystals large, which is the opposite of everything else in this game, where the aim is to keep them small."],
+["Affogato","Bitter","Cream","Rippled","Bean or pod","Italian","Modern","A","Vanilla with espresso poured over it, sweet and bitter at once.","It is not really a flavour but an instruction. The name means drowned, and the whole point is the contrast between hot coffee and cold ice cream, which a frozen version can only imitate."],
+["Wasabi","Herbal","Green","Smooth","Root","Japanese","Modern","A","Sharp, sinus-clearing heat that fades quickly, with a green vegetal note.","Real wasabi loses almost all its heat within fifteen minutes of being grated, which is why nearly everything sold as wasabi outside Japan is dyed horseradish."],
+["Persimmon","Fruity","Orange","Smooth","Fruit","Japanese","Modern","A","Honeyed and floral when ripe, with a texture like jam.","Unripe it is so astringent it makes your mouth feel furry, and then it turns to honey almost overnight, which is why the good ones look nearly rotten."],
+["Key Lime Pie","Tart","Green","Chunky","Fruit","American","Modern","A","Sharp lime custard with biscuit pieces through it.","The filling sets without any heat at all. The acid in the lime juice thickens the condensed milk chemically, which is why the original recipe needed no oven."],
+["Strawberry Shortcake","Fruity","Pink","Loaded","Grain","American","Parlour","A","Strawberries and cream with sweet biscuit pieces through it.","The American version uses a split scone-like biscuit rather than sponge, which is the whole point, because the biscuit soaks up the fruit juice instead of going soggy."],
+["Blueberry Muffin","Sweet","Blue","Chunky","Grain","American","Modern","A","Sweet cake and blueberry together, with sponge pieces through a vanilla base.","Bakers toss the berries in flour before mixing, because otherwise every single one sinks to the bottom of the tin before the batter sets."],
+["Apple Strudel","Sweet","Tan","Chunky","Fruit","Central European","Classic","A","Spiced apple and raisins with flakes of thin pastry through it.","The pastry is stretched by hand until you can read a newspaper through it, and that is the literal test Viennese bakers use to judge whether it is thin enough."],
+["Tarte Tatin","Sweet","Tan","Rippled","Fruit","French","Classic","A","Deeply caramelised apple, darker and more buttery than apple pie.","It was a mistake. Two sisters running a hotel burnt a pan of apples, threw pastry over the top to save it, and served it upside down."],
+["Orange Creamsicle","Tart","Orange","Layered","Fruit","American","Parlour","A","Sharp orange sherbet around a vanilla centre.","The two layers freeze at different rates, which is the only reason the shell stays firm while the middle stays soft, and getting that balance right is the whole trick."],
+["Cream Soda","Sweet","Cream","Smooth","Bean or pod","American","Parlour","A","Sweet vanilla soda flavour, faintly floral.","It has never contained any cream. The name refers to cream of tartar, which was in the original nineteenth century recipe as a raising agent."],
+["Cola","Sweet","Brown","Icy","Spice","American","Parlour","A","Sweet, spiced and citrusy, the taste of the drink rather than of any single ingredient.","Most of the flavour is orange, lime and cinnamon oil, and the kola nut that gave it the name stopped being a meaningful ingredient a very long time ago."],
+["Ginger Beer","Herbal","Tan","Icy","Root","British","Classic","A","Hot, spicy ginger with a sharp fizzy sweetness.","It was originally brewed with a live culture called a ginger beer plant, which households passed between each other like a sourdough starter."],
+["Lemonade","Tart","Yellow","Icy","Fruit","American","Parlour","A","Sharp, sweet lemon, lighter than lemon sorbet.","The cloudy American kind and the clear fizzy British kind are two entirely different drinks that happen to share a name, which causes constant confusion in both directions."],
+["Honeydew","Fruity","Green","Icy","Fruit","Chinese","Modern","A","Soft, watery and lightly sweet pale green melon.","Unlike most fruit it does not sweeten at all after picking, so a bad honeydew was always going to be bad and there is nothing you can do about it."],
+["Coconut Sorbet","Creamy","White","Icy","Nut","Latin American","Modern","A","Rich coconut with no dairy at all, creamier than any other sorbet.","Coconut has enough fat to make a sorbet feel like ice cream, which makes it the one dairy-free option that never tastes thin or icy."],
+["Raspberry Cheesecake","Tart","Pink","Loaded","Dairy","American","Modern","A","Tangy cream cheese with sharp raspberry ripple and biscuit pieces.","The acid in the fruit thickens the cheese further as it sits, so this sets noticeably harder in the freezer than a plain cheesecake flavour does."],
+["Toffee Apple","Sweet","Red","Chunky","Fruit","British","Parlour","A","Sharp apple under a hard, dark toffee shell.","The shell has to reach what confectioners call hard crack, which is the hottest sugar goes before it burns, and a few degrees either side gives you either glue or charcoal."],
+["Marmalade","Tart","Orange","Rippled","Fruit","British","Classic","A","Bitter orange peel and sugar, sharper and more adult than plain orange.","Seville oranges are far too bitter to eat and are grown almost entirely for this one purpose, with a season lasting only a few weeks in midwinter."],
+["Chocolate Hazelnut","Sweet","Brown","Rippled","Nut","Italian","Modern","A","Chocolate and hazelnut spread rippled through a smooth base.","Roughly a fifth of the entire world hazelnut crop goes into a single brand of spread, and most of those nuts are grown along the Turkish Black Sea coast."],
+["Almond Croissant","Toasty","Tan","Chunky","Nut","French","Modern","A","Buttery pastry and sweet almond frangipane together.","It was invented to use up yesterday's unsold croissants, which is why a bakery that makes good ones is usually a bakery whose plain croissants sell out."],
+["Coconut Macaroon","Sweet","White","Chunky","Nut","French","Parlour","A","Chewy toasted coconut through a sweet base.","It contains no flour at all, only egg white and coconut, which is exactly why it became a fixture at Passover when leavened grain is forbidden."],
+["Pecan Pie","Sweet","Tan","Loaded","Nut","American","Parlour","A","Very sweet syrup and buttery pecans with pastry through it.","The nuts float to the top on their own as it bakes, which is why every slice has a neat layer of pecans and a layer of set syrup underneath."],
+["Peanut Butter and Jelly","Sweet","Pink","Rippled","Nut","American","Parlour","A","Salty peanut butter with sharp fruit jam rippled through it.","The combination spread through army ration kits during the Second World War, where both components happened to be issued together and soldiers started mixing them."],
+["Cocoa Nib","Bitter","Brown","Chunky","Bean or pod","Latin American","Modern","A","Crunchy roasted cocoa pieces, bitter and intensely chocolatey with no sugar of their own.","This is what chocolate actually tastes like before anything is added, and most people trying it for the first time are surprised by how little it resembles a chocolate bar."],
+["Chocolate Coconut","Sweet","Brown","Chunky","Nut","Latin American","Parlour","A","Dark chocolate with toasted coconut through it.","Coconut fat and cocoa butter set at almost exactly the same temperature, which is why the two hold together so well and why coconut oil is used in cheap chocolate."],
+["Victoria Sponge","Sweet","Cream","Layered","Grain","British","Classic","A","Light vanilla sponge with jam and cream.","It is named for a queen who took it with afternoon tea, and it remains the standard technical test at village baking competitions across Britain."],
+["Bread and Butter Pudding","Creamy","Tan","Chunky","Grain","British","Classic","A","Custard-soaked bread with raisins and nutmeg.","It only works with stale bread, because fresh bread is already saturated with its own moisture and cannot absorb the custard properly."],
+["Custard Tart","Creamy","Yellow","Chunky","Dairy","British","Classic","A","Set egg custard with nutmeg and pastry pieces.","The grating of nutmeg on top is not a garnish. It has been part of the recipe since the medieval version and the tart is considered wrong without it."],
+["Portuguese Tart","Toasty","Yellow","Chunky","Dairy","Iberian","Classic","A","Caramelised, slightly burnt egg custard with flaky pastry.","Monasteries used enormous quantities of egg white to starch nuns' habits, and these were invented to use up the mountain of leftover yolks."],
+["Pavlova","Sweet","White","Loaded","Fruit","Antipodean","Parlour","A","Crisp meringue with cream and sharp fruit through it.","Australia and New Zealand have argued over who invented it for nearly a century, and the dispute has reached the level of duelling academic papers."],
+["Trifle","Sweet","Multi","Layered","Fruit","British","Classic","A","Sponge, fruit, custard and cream in distinct layers.","The layers are structural rather than decorative. Each one has to set before the next goes on, and getting it wrong makes the whole thing slump into soup."],
+["Baked Alaska","Sweet","White","Layered","Confection","American","Parlour","A","Ice cream under toasted meringue, hot outside and frozen inside.","The meringue works as genuine insulation. It is full of air pockets that conduct heat very badly, which is why the ice cream survives several minutes in a hot oven."],
+["Flan","Sweet","Tan","Rippled","Dairy","Iberian","Classic","A","Set caramel custard, silky and deeply sweet.","The caramel goes into the bottom of the tin first and ends up on top when it is turned out, which is the entire trick and the reason it looks the way it does."],
+["Cannoli","Creamy","Cream","Chunky","Dairy","Italian","Classic","A","Sweet ricotta with candied peel, chocolate and crisp pastry pieces.","The shells are always filled to order, because a cannolo filled in advance goes soft within an hour and Sicilians consider a soggy one genuinely offensive."],
+["Profiterole","Sweet","Brown","Loaded","Grain","French","Classic","A","Choux pastry, cream and chocolate sauce together.","The pastry puffs up on steam alone with no raising agent whatsoever, which is why the oven door must stay shut or the whole tray collapses."],
+["Eclair","Sweet","Brown","Layered","Grain","French","Classic","A","Chocolate-topped choux pastry with cream through it.","The name means flash of lightning, and the usual explanation is that it is meant to be eaten that quickly before the filling makes the pastry go soft."],
+["Macaron","Sweet","Pink","Chunky","Nut","French","Modern","A","Almond meringue shells with a soft centre, lightly floral.","The smooth top and ruffled foot only appear if the shells sit out until a skin forms, and skipping that step is the single most common reason they fail."],
+["Mint Tea","Herbal","Green","Smooth","Leaf","Middle Eastern","Classic","A","Sweet green tea heavy with fresh mint.","It is poured from a great height on purpose, which aerates it and builds a foam on top, and pouring it flat is considered careless rather than merely unusual."],
+["Chilli","Herbal","Red","Smooth","Spice","Latin American","Classic","A","Sweet with a slow building heat that arrives after the cold.","Cold does not stop capsaicin, it only delays it, so the burn tends to arrive once the scoop has already melted and you have swallowed it."],
+["Vanilla Bean","Creamy","Cream","Smooth","Bean or pod","Latin American","Classic","A","Real vanilla with the seeds left in, deeper and more floral than extract.","The orchid is Mexican and for centuries it would only fruit there, because one particular local bee was the only thing that could pollinate it. Every plantation elsewhere is pollinated by hand."],
+["Sachertorte","Bitter","Brown","Layered","Fruit","Central European","Classic","A","Dark chocolate cake with apricot jam through it.","Two Viennese institutions fought a seven year court case over which of them was allowed to call its cake the original, and the ruling still governs the wording on the boxes."],
+["Lamington","Sweet","Brown","Chunky","Nut","Antipodean","Parlour","A","Sponge, chocolate and desiccated coconut together.","The usual story is that a cook dropped a sponge cake into chocolate and rolled it in coconut so it could be picked up without making a mess."],
+["Gin and Tonic","Tart","White","Icy","Spice","British","Modern","A","Sharp, juniper-heavy and faintly bitter, with citrus.","Tonic water came first as a malaria treatment, and the gin was added purely to make the quinine bearable, so the drink began as a way to take medicine."],
+["Prosecco","Tart","Cream","Icy","Fruit","Italian","Modern","A","Light, fruity and faintly floral sparkling wine.","It is fermented in a large tank rather than in the bottle, which keeps it fruity and fresh and is the reason it costs a fraction of what champagne does."],
+["Sangria","Fruity","Red","Icy","Fruit","Iberian","Modern","A","Red wine with citrus and stone fruit, sweet and sharp together.","The fruit is not a garnish. It is left in long enough to sweeten the wine and soften its tannins, which is why the drink began as a way to rescue bad wine."],
+["Mulled Wine","Herbal","Red","Icy","Spice","Central European","Classic","A","Warm spiced red wine with orange and clove.","Spicing wine started as a way to save barrels that had begun to turn, so what is now a seasonal treat began as damage control."],
+["Irish Coffee","Bitter","Tan","Layered","Bean or pod","British","Parlour","A","Strong sweet coffee with whiskey and a layer of cream.","The cream has to be floated over the back of a spoon and it will only sit on top if the coffee underneath has been sweetened, because sugar makes the coffee denser."],
+["Espresso Martini","Bitter","Brown","Smooth","Bean or pod","British","Modern","A","Cold coffee, sweet and bitter with a boozy edge.","It was invented in a Soho bar in the 1980s when a customer asked the bartender for something that would wake her up and get her drunk at the same time."],
+["White Russian","Creamy","Cream","Rippled","Bean or pod","American","Modern","A","Coffee liqueur and cream, sweet and mild.","The original drink had no cream in it at all and was simply vodka and coffee liqueur. The cream version came later and took the name."],
+["Blackberry Crumble","Tart","Purple","Loaded","Fruit","British","Parlour","A","Dark sharp berries with buttery crumble pieces.","The fruit has to be cooked down first, because raw blackberries release enough water to turn any crumble topping into porridge overnight."],
+["Chocolate Sea Salt","Salty","Brown","Chunky","Bean or pod","French","Modern","A","Dark chocolate with salt flakes through it.","Salt suppresses your perception of bitterness, so a pinch of it makes dark chocolate taste noticeably sweeter without any sugar being added."],
+["Madeleine","Sweet","Yellow","Chunky","Grain","French","Classic","A","Buttery lemon sponge with soft cake pieces through it.","The shell shape is not decorative. The ridged tin forces the batter to rise into a distinct hump on the back, and French bakers judge a madeleine almost entirely on that bump."],
+["Millefeuille","Creamy","Cream","Layered","Grain","French","Classic","A","Crisp puff pastry layered with vanilla custard.","The name claims a thousand leaves, but a properly made one has around seven hundred and thirty, produced by folding the dough six times."]
+,
+/* ---------------- too obscure to be an answer ---------------- */
+["Longan","Fruity","White","Icy","Fruit","Chinese","Modern","D","",""],
+["Rambutan","Fruity","White","Icy","Fruit","SE Asian","Modern","D","",""],
+["Mangosteen","Tart","White","Icy","Fruit","SE Asian","Modern","D","",""],
+["Soursop","Tart","White","Icy","Fruit","Latin American","Modern","D","",""],
+["Cherimoya","Creamy","White","Smooth","Fruit","Latin American","Modern","D","",""],
+["Feijoa","Fruity","Green","Icy","Fruit","Antipodean","Modern","D","",""],
+["Calamansi","Tart","Green","Icy","Fruit","SE Asian","Modern","D","",""],
+["Sudachi","Tart","Green","Icy","Fruit","Japanese","Modern","D","",""],
+["Ume","Tart","Pink","Icy","Fruit","Japanese","Classic","D","",""],
+["Physalis","Tart","Orange","Icy","Fruit","Latin American","Modern","D","",""],
+["Jabuticaba","Tart","Purple","Icy","Fruit","Latin American","Modern","D","",""],
+["Pitanga","Tart","Red","Icy","Fruit","Latin American","Modern","D","",""],
+["Camu Camu","Tart","Orange","Icy","Fruit","Latin American","Modern","D","",""],
+["Sloe","Tart","Purple","Icy","Fruit","British","Classic","D","",""],
+["Rosehip","Tart","Red","Rippled","Fruit","Nordic","Classic","D","",""],
+["Rowan","Tart","Orange","Rippled","Fruit","Nordic","Classic","D","",""],
+["Tayberry","Tart","Red","Rippled","Fruit","British","Modern","D","",""],
+["Medlar","Fruity","Brown","Smooth","Fruit","British","Classic","D","",""],
+["Kumquat","Tart","Orange","Chunky","Fruit","Chinese","Classic","D","",""],
+["Bergamot","Tart","Yellow","Icy","Fruit","Italian","Modern","D","",""],
+["Yuja","Tart","Yellow","Rippled","Fruit","Korean","Modern","D","",""],
+["Omija","Tart","Red","Icy","Fruit","Korean","Classic","D","",""],
+["Grass Jelly","Bitter","Grey","Chunky","Leaf","Chinese","Modern","D","",""],
+["Sahlep","Creamy","Cream","Chewy","Root","Middle Eastern","Classic","D","",""],
+["Booza","Creamy","White","Chewy","Dairy","Middle Eastern","Classic","D","",""],
+["Kaymak","Creamy","Cream","Smooth","Dairy","Middle Eastern","Classic","D","",""],
+["Tonka Bean","Herbal","Tan","Smooth","Bean or pod","Latin American","Modern","D","",""],
+["Szechuan Pepper","Herbal","Pink","Smooth","Spice","Chinese","Modern","D","",""],
+["Mace","Herbal","Orange","Smooth","Spice","SE Asian","Classic","D","",""],
+["Allspice","Herbal","Brown","Smooth","Spice","Latin American","Classic","D","",""],
+["Juniper","Herbal","Green","Smooth","Spice","Nordic","Classic","D","",""],
+["Pine","Herbal","Green","Smooth","Leaf","Nordic","Modern","D","",""],
+["Birch Sap","Creamy","Cream","Icy","Leaf","Nordic","Classic","D","",""],
+["Fir Tip","Herbal","Green","Icy","Leaf","Nordic","Modern","D","",""],
+["Lemon Verbena","Herbal","Green","Smooth","Leaf","French","Modern","D","",""],
+["Tarragon","Herbal","Green","Smooth","Leaf","French","Modern","D","",""],
+["Fennel","Herbal","White","Smooth","Spice","Italian","Modern","D","",""],
+["Sage","Herbal","Green","Smooth","Leaf","Italian","Modern","D","",""],
+["Marigold","Herbal","Orange","Smooth","Flower","Latin American","Modern","D","",""],
+["Lilac","Herbal","Purple","Smooth","Flower","Nordic","Modern","D","",""],
+["Blue Cheese","Salty","Cream","Chunky","Dairy","British","Modern","D","",""],
+["Burrata","Creamy","White","Smooth","Dairy","Italian","Modern","D","",""],
+["Sheep Milk","Creamy","White","Smooth","Dairy","Iberian","Classic","D","",""],
+["Buffalo Milk","Creamy","White","Smooth","Dairy","South Asian","Classic","D","",""],
+["Truffle","Herbal","Grey","Smooth","Root","Italian","Modern","D","",""],
+["Soy Sauce","Salty","Brown","Smooth","Bean or pod","Japanese","Modern","D","",""],
+["Tomato","Tart","Red","Smooth","Fruit","Italian","Modern","D","",""],
+["Cucumber","Herbal","Green","Icy","Fruit","Nordic","Modern","D","",""],
+["Celery","Herbal","Green","Icy","Root","French","Modern","D","",""],
+["Squash","Creamy","Orange","Smooth","Root","Japanese","Modern","D","",""],
+["Black Walnut","Toasty","Grey","Chunky","Nut","American","Classic","D","",""],
+["Hickory Nut","Toasty","Tan","Chunky","Nut","American","Classic","D","",""],
+["Brazil Nut","Creamy","Cream","Chunky","Nut","Latin American","Modern","D","",""],
+["Sunchoke","Creamy","Tan","Smooth","Root","American","Modern","D","",""],
+["Salsify","Creamy","Cream","Smooth","Root","French","Classic","D","",""],
+["Sorrel","Tart","Green","Icy","Leaf","French","Classic","D","",""],
+["Nettle","Herbal","Green","Smooth","Leaf","Nordic","Classic","D","",""],
+["Rye","Toasty","Brown","Chunky","Grain","Nordic","Classic","D","",""],
+["Semolina","Creamy","Cream","Chunky","Grain","Middle Eastern","Classic","D","",""],
+["Barley","Toasty","Tan","Smooth","Grain","Korean","Classic","D","",""],
+["Sorghum","Sweet","Brown","Smooth","Grain","American","Classic","D","",""],
+["Molasses","Bitter","Brown","Rippled","Grain","American","Classic","D","",""],
+["Treacle Tart","Sweet","Tan","Chunky","Grain","British","Parlour","D","",""],
+["Stollen","Sweet","Cream","Chunky","Grain","Central European","Classic","D","",""],
+["Battenberg","Sweet","Pink","Layered","Nut","British","Parlour","D","",""],
+["Mince Pie","Herbal","Brown","Chunky","Fruit","British","Parlour","D","",""],
+["Sambuca","Herbal","White","Smooth","Spice","Italian","Modern","D","",""],
+["Grappa","Toasty","Cream","Smooth","Fruit","Italian","Modern","D","",""],
+["Negroni","Bitter","Red","Icy","Flower","Italian","Modern","D","",""],
+["Aperol","Bitter","Orange","Icy","Flower","Italian","Modern","D","",""],
+["Cider","Tart","Yellow","Icy","Fruit","British","Classic","D","",""],
+["Port","Sweet","Purple","Smooth","Fruit","Iberian","Classic","D","",""],
+["Soju","Creamy","White","Smooth","Grain","Korean","Modern","D","",""],
+["Ramune","Sweet","Blue","Icy","Confection","Japanese","Modern","D","",""],
+["Calpis","Tart","White","Smooth","Dairy","Japanese","Modern","D","",""],
+["Es Puter","Creamy","Cream","Smooth","Nut","SE Asian","Classic","D","",""],
+["Sorbetes","Sweet","Multi","Layered","Dairy","SE Asian","Parlour","D","",""],
+["Klepon","Herbal","Green","Chewy","Leaf","SE Asian","Classic","D","",""],
+["Nieve de Garrafa","Fruity","Pink","Icy","Fruit","Latin American","Classic","D","",""],
+["Raspado","Tart","Red","Icy","Fruit","Latin American","Parlour","D","",""],
+["Mantecado","Creamy","Cream","Smooth","Dairy","Iberian","Classic","D","",""],
+["Leche Merengada","Herbal","Cream","Smooth","Dairy","Iberian","Classic","D","",""],
+["Malaga","Sweet","Cream","Chunky","Fruit","Iberian","Classic","D","",""],
+["Zuppa Inglese","Sweet","Red","Layered","Grain","Italian","Classic","D","",""],
+["Puffed Rice","Toasty","Cream","Chunky","Grain","South Asian","Parlour","D","",""],
+["Jalebi","Sweet","Orange","Chunky","Grain","South Asian","Classic","D","",""],
+["Rabri","Creamy","Cream","Chunky","Dairy","South Asian","Classic","D","",""],
+["Badam","Toasty","Cream","Smooth","Nut","South Asian","Classic","D","",""],
+["Loganberry","Tart","Red","Rippled","Fruit","American","Classic","D","",""],
+["Mulberry","Fruity","Purple","Rippled","Fruit","Chinese","Classic","D","",""],
+["Cassis","Tart","Purple","Icy","Fruit","French","Classic","D","",""],
+["Redcurrant","Tart","Red","Icy","Fruit","Nordic","Classic","D","",""],
+["Lingonberry","Tart","Red","Rippled","Fruit","Nordic","Classic","D","",""],
+["Cloudberry","Tart","Orange","Rippled","Fruit","Nordic","Classic","D","",""],
+["Damson","Tart","Purple","Rippled","Fruit","British","Classic","D","",""],
+["Greengage","Fruity","Green","Icy","Fruit","French","Classic","D","",""],
+["Quince","Fruity","Pink","Smooth","Fruit","Middle Eastern","Classic","D","",""],
+["Tamarind","Tart","Brown","Icy","Fruit","Latin American","Modern","D","",""],
+["Lucuma","Creamy","Yellow","Smooth","Fruit","Latin American","Classic","D","",""],
+["Prune","Sweet","Brown","Chunky","Fruit","French","Classic","D","",""],
+["Sea Buckthorn","Tart","Orange","Icy","Fruit","Nordic","Modern","D","",""],
+["Elderberry","Tart","Purple","Rippled","Fruit","Central European","Classic","D","",""],
+["Starfruit","Tart","Yellow","Icy","Fruit","SE Asian","Modern","D","",""],
+["Amarena Cherry","Fruity","Red","Rippled","Fruit","Italian","Classic","D","",""],
+["Spumoni","Sweet","Multi","Layered","Nut","Italian","Classic","D","",""],
+["Balsamic Strawberry","Tart","Pink","Rippled","Fruit","Italian","Modern","D","",""],
+["Sesame Brittle","Toasty","Tan","Chunky","Seed","Middle Eastern","Classic","D","",""],
+["Pine Nut","Toasty","Cream","Chunky","Seed","Italian","Classic","D","",""],
+["Sunflower Seed","Toasty","Grey","Chunky","Seed","Nordic","Modern","D","",""],
+["Pumpkin Seed","Toasty","Green","Chunky","Seed","Latin American","Modern","D","",""],
+["Kinako","Toasty","Tan","Smooth","Bean or pod","Japanese","Modern","D","",""],
+["Mung Bean","Creamy","Green","Smooth","Seed","SE Asian","Parlour","D","",""],
+["Horchata","Creamy","Cream","Smooth","Grain","Iberian","Classic","D","",""],
+["Cornflake","Toasty","Tan","Chunky","Grain","British","Parlour","D","",""],
+["Brown Bread","Toasty","Tan","Chunky","Grain","British","Classic","D","",""],
+["Sago","Creamy","White","Chunky","Grain","SE Asian","Classic","D","",""],
+["Fior di Latte","Creamy","White","Smooth","Dairy","Italian","Classic","D","",""],
+["Zabaglione","Creamy","Yellow","Smooth","Dairy","Italian","Classic","D","",""],
+["Crema Catalana","Sweet","Yellow","Chunky","Dairy","Iberian","Classic","D","",""],
+["Buttermilk","Tart","White","Smooth","Dairy","American","Modern","D","",""],
+["Salted Egg","Salty","Yellow","Rippled","Dairy","SE Asian","Modern","D","",""],
+["Qashta","Creamy","Cream","Smooth","Dairy","Middle Eastern","Classic","D","",""],
+["Genmaicha","Toasty","Green","Smooth","Grain","Japanese","Modern","D","",""],
+["Rooibos","Toasty","Red","Smooth","Leaf","Nordic","Modern","D","",""],
+["Osmanthus","Herbal","Yellow","Smooth","Flower","Chinese","Modern","D","",""],
+["Honeysuckle","Herbal","Cream","Smooth","Flower","Chinese","Modern","D","",""],
+["Clove","Herbal","Brown","Smooth","Spice","SE Asian","Classic","D","",""],
+["Star Anise","Herbal","White","Smooth","Spice","Chinese","Classic","D","",""],
+["Anise","Herbal","White","Smooth","Spice","Iberian","Classic","D","",""],
+["Turmeric","Herbal","Yellow","Smooth","Root","South Asian","Modern","D","",""],
+["Lemongrass","Herbal","Green","Smooth","Leaf","SE Asian","Modern","D","",""],
+["Rosemary","Herbal","Green","Smooth","Leaf","Italian","Modern","D","",""],
+["Violet","Herbal","Purple","Smooth","Flower","French","Classic","D","",""],
+["Mastic","Creamy","White","Chewy","Spice","Middle Eastern","Classic","D","",""],
+["Bastani","Herbal","Green","Chunky","Flower","Middle Eastern","Classic","D","",""],
+["Butterfly Pea","Herbal","Blue","Smooth","Flower","SE Asian","Modern","D","",""],
+["Kaffir Lime","Herbal","Green","Icy","Leaf","SE Asian","Modern","D","",""],
+["Oolong","Toasty","Tan","Smooth","Leaf","Chinese","Modern","D","",""],
+["Assam","Bitter","Brown","Smooth","Leaf","South Asian","Modern","D","",""],
+["Beetroot","Herbal","Purple","Smooth","Root","Nordic","Modern","D","",""],
+["Marsala","Toasty","Tan","Smooth","Fruit","Italian","Classic","D","",""],
+["Stout","Bitter","Brown","Smooth","Grain","British","Modern","D","",""],
+["Black Pepper","Herbal","Grey","Smooth","Spice","Italian","Modern","D","",""],
+["Cafe de Olla","Bitter","Brown","Smooth","Bean or pod","Latin American","Modern","D","",""],
+["Cendol","Herbal","Green","Loaded","Leaf","SE Asian","Parlour","D","",""],
+["Buko Pandan","Herbal","Green","Loaded","Leaf","SE Asian","Parlour","D","",""],
+["Injeolmi","Toasty","Tan","Chewy","Bean or pod","Korean","Modern","D","",""],
+["Misugaru","Toasty","Tan","Smooth","Grain","Korean","Modern","D","",""],
+["Amazake","Creamy","Cream","Smooth","Grain","Japanese","Classic","D","",""],
+["Shiso","Herbal","Green","Smooth","Leaf","Japanese","Modern","D","",""],
+["Kaya","Sweet","Green","Rippled","Leaf","SE Asian","Classic","D","",""],
+["Gula Melaka","Sweet","Brown","Rippled","Flower","SE Asian","Classic","D","",""],
+["Teh Tarik","Creamy","Tan","Smooth","Leaf","SE Asian","Modern","D","",""],
+["Nata de Coco","Sweet","White","Chewy","Nut","SE Asian","Parlour","D","",""],
+["Hotteok","Sweet","Tan","Chunky","Grain","Korean","Classic","D","",""],
+["Dalgona","Bitter","Tan","Chunky","Confection","Korean","Modern","D","",""],
+["Gulab Jamun","Sweet","Brown","Chunky","Dairy","South Asian","Classic","D","",""],
+["Rasmalai","Creamy","Cream","Chunky","Dairy","South Asian","Classic","D","",""],
+["Thandai","Herbal","Cream","Smooth","Nut","South Asian","Classic","D","",""],
+["Paan","Herbal","Green","Loaded","Leaf","South Asian","Modern","D","",""],
+["Cassata","Sweet","Multi","Layered","Dairy","Italian","Classic","D","",""],
+["Salty Liquorice","Salty","Grey","Smooth","Root","Nordic","Modern","D","",""],
+["Bakewell Tart","Toasty","Cream","Loaded","Nut","British","Parlour","D","",""],
+["Coffee Walnut","Bitter","Tan","Chunky","Nut","British","Parlour","D","",""],
+["Alfajor","Sweet","Tan","Layered","Dairy","Latin American","Classic","D","",""],
+["Brigadeiro","Sweet","Brown","Chunky","Dairy","Latin American","Parlour","D","",""],
+["Baumkuchen","Sweet","Tan","Layered","Grain","Central European","Classic","D","",""],
+["Kaiserschmarrn","Sweet","Cream","Chunky","Grain","Central European","Classic","D","",""],
+["Linzer","Tart","Red","Layered","Nut","Central European","Classic","D","",""],
+["Anzac Biscuit","Toasty","Tan","Chunky","Grain","Antipodean","Parlour","D","",""],
+["Fairy Bread","Sweet","Multi","Chunky","Confection","Antipodean","Parlour","D","",""],
+["Arctic Roll","Sweet","Pink","Layered","Grain","British","Parlour","D","",""],
+["Rum Baba","Sweet","Tan","Chunky","Grain","French","Classic","D","",""],
+["Knickerbocker Glory","Sweet","Multi","Loaded","Fruit","British","Parlour","D","",""],
+["Candied Orange","Sweet","Orange","Chunky","Fruit","Italian","Classic","D","",""],
+["Malt Ball","Sweet","Brown","Chunky","Grain","British","Parlour","D","",""],
+["Turtle","Sweet","Brown","Loaded","Nut","American","Parlour","D","",""],
+["Liquorice Allsorts","Sweet","Multi","Loaded","Root","British","Parlour","D","",""],
+["Sherbet Lemon","Tart","Yellow","Chunky","Fruit","British","Parlour","D","",""],
+["Pear Drop","Fruity","Pink","Smooth","Fruit","British","Parlour","D","",""],
+["Toffee Crunch","Sweet","Tan","Chunky","Confection","British","Parlour","D","",""],
+["Chocolate Chilli","Sweet","Brown","Smooth","Spice","Latin American","Classic","D","",""],
+["Vanilla Fudge","Sweet","Cream","Rippled","Confection","British","Parlour","D","",""],
+["Burnt Caramel","Bitter","Brown","Smooth","Confection","French","Modern","D","",""],
+["Cajeta","Sweet","Tan","Rippled","Dairy","Latin American","Classic","D","",""],
+["Banana Bread","Sweet","Tan","Chunky","Grain","American","Modern","D","",""],
+["Carrot Cake","Herbal","Orange","Chunky","Root","British","Modern","D","",""],
+["Grape","Fruity","Purple","Icy","Fruit","American","Parlour","D","",""],
+["Melon","Fruity","Green","Icy","Fruit","Japanese","Modern","D","",""]
+,
+["Date","Sweet","Brown","Smooth","Fruit","Middle Eastern","Modern","A","Deep caramel sweetness with a slight toffee edge, made from dried dates rather than sugar.","Medjool dates are sweet enough to carry a whole batch with no added sugar at all, and a date palm can keep producing fruit for over a hundred years."],
+["Fig","Fruity","Purple","Chunky","Fruit","Middle Eastern","Modern","A","Jammy, honeyed and faintly floral, with a gentle crunch running through it.","The crunch is not a nut. Every fig holds hundreds of tiny seeds, and a fig is not really a fruit at all but an inverted flower that blooms on the inside."],
+["Pomegranate","Tart","Red","Icy","Fruit","Middle Eastern","Modern","A","Sharp, tannic and deep red, more sour than sweet.","Only the seed coats are used, because the pale pith around them is bitter enough to ruin a whole batch, and a single fruit can hold well over six hundred seeds."],
+["Charcoal","Bitter","Grey","Smooth","Grain","Japanese","Modern","D","",""],
+["Falooda","Sweet","Pink","Loaded","Flower","South Asian","Parlour","D","",""],
+["Ginger Snap","Herbal","Tan","Chunky","Spice","Nordic","Classic","D","",""],
+["Lemon Curd","Tart","Yellow","Rippled","Fruit","British","Classic","D","",""]
+];
+</script>
+<script>
+"use strict";
+
+var FLAVOURS = (window.FLAVOUR_BOOK || []).map(function(r){
+  return {n:r[0], note:r[1], col:r[2], con:r[3], src:r[4], trad:r[5], era:r[6],
+          pool:r[7], what:r[8] || "", trivia:r[9] || ""};
+});
+
+var HOMOGENEOUS = ["Smooth","Icy","Chewy"];
+var MAX = 6;
+var SCORE = [15,12,9,7,5,3];
+var LICK_SCORE = 1;
+var EPOCH = Date.UTC(2026,0,1);
+var ARCHIVE_DAYS = 30;
+
+var COLUMNS = [
+  {key:"note", label:"Note",
+   blurb:"What the flavour actually tastes of once you look past the sugar. Nearly everything in the book is sweet, so what matters here is whatever else is going on alongside it.",
+   vals:["Sweet","Creamy","Fruity","Tart","Toasty","Bitter","Salty","Herbal"],
+   eg:"Coffee is <b>bitter</b>, salted caramel is <b>salty</b>, and plain chocolate is just <b>sweet</b>."},
+  {key:"col", label:"Colour",
+   blurb:"The colour of the scoop as you would normally be handed it, food dye and all.",
+   vals:["Cream","White","Brown","Tan","Pink","Red","Green","Yellow","Orange","Purple","Grey","Blue","Multi"],
+   eg:"Pistachio is <b>green</b>. Neapolitan is <b>multi</b>, because picking any single colour would be dishonest."},
+  {key:"con", label:"Consistency",
+   blurb:"How the flavour is put together. Smooth, icy and chewy are all one thing the whole way through, while rippled, chunky, loaded and layered are not. If your guess lands in the right group but on the wrong value, the cell turns amber.",
+   vals:["Smooth","Icy","Chewy","|","Rippled","Chunky","Loaded","Layered"],
+   eg:"Rocky road is <b>loaded</b>, meaning it has a soft ripple and hard pieces at the same time. Neapolitan is <b>layered</b>, three blocks sitting side by side."},
+  {key:"src", label:"Source",
+   blurb:"Where the flavour actually comes from. This is the column that puts things together in ways none of the others do, and it is usually the one that teaches you something.",
+   vals:["Bean or pod","Fruit","Nut","Seed","Leaf","Root","Flower","Spice","Grain","Dairy","Confection"],
+   eg:"Vanilla, chocolate and coffee are all <b>bean or pod</b>, which is rarely the first thing anybody thinks of."},
+  {key:"trad", label:"Tradition",
+   blurb:"The cooking culture a flavour belongs to, rather than wherever the tub happened to be manufactured.",
+   vals:["American","Italian","British","French","Central European","Nordic","Iberian","Japanese","Chinese","Korean","SE Asian","South Asian","Middle Eastern","Latin American","Antipodean"],
+   eg:"Stracciatella is <b>Italian</b> and hokey pokey is <b>Antipodean</b>."},
+  {key:"era", label:"Era",
+   blurb:"Roughly when the flavour turned up. Classic means it already existed before mechanical freezing, parlour covers the soda fountain and the post-war freezer aisle, and modern is the last few decades.",
+   vals:["Classic","Parlour","Modern"],
+   eg:"Lemon sorbet is <b>classic</b>, rocky road is <b>parlour</b>, salted caramel is <b>modern</b>."}
+];
+
+function mulberry32(a){
+  return function(){
+    a |= 0; a = a + 0x6D2B79F5 | 0;
+    var t = Math.imul(a ^ a >>> 15, 1 | a);
+    t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+    return ((t ^ t >>> 14) >>> 0) / 4294967296;
+  };
+}
+
+var ANSWER_ORDER = [];
+FLAVOURS.forEach(function(f, i){ if(f.pool === "A") ANSWER_ORDER.push(i); });
+(function(){
+  var r = mulberry32(902377);
+  for(var i = ANSWER_ORDER.length - 1; i > 0; i--){
+    var j = Math.floor(r() * (i + 1));
+    var t = ANSWER_ORDER[i]; ANSWER_ORDER[i] = ANSWER_ORDER[j]; ANSWER_ORDER[j] = t;
+  }
+})();
+
+var now = new Date();
+var TODAY = Math.round((Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()) - EPOCH) / 86400000);
+
+function answerFor(day){
+  var n = ANSWER_ORDER.length;
+  return FLAVOURS[ANSWER_ORDER[((day % n) + n) % n]];
+}
+function conState(g, a){
+  if(g === a) return "hit";
+  var gh = HOMOGENEOUS.indexOf(g) > -1;
+  var ah = HOMOGENEOUS.indexOf(a) > -1;
+  return gh === ah ? "near" : "miss";
+}
+function cmp(g, a){
+  return [
+    {t:g.note, s:g.note === a.note ? "hit" : "miss"},
+    {t:g.col,  s:g.col  === a.col  ? "hit" : "miss"},
+    {t:g.con,  s:conState(g.con, a.con)},
+    {t:g.src,  s:g.src  === a.src  ? "hit" : "miss"},
+    {t:g.trad, s:g.trad === a.trad ? "hit" : "miss"},
+    {t:g.era,  s:g.era  === a.era  ? "hit" : "miss"}
+  ];
+}
+function key(r){ return r.map(function(c){ return c.s; }).join("|"); }
+function byName(n){
+  for(var i = 0; i < FLAVOURS.length; i++){ if(FLAVOURS[i].n === n) return FLAVOURS[i]; }
+  return null;
+}
+function survivors(guesses, ans){
+  return FLAVOURS.filter(function(c){
+    if(c.pool !== "A") return false;
+    return guesses.every(function(gn){
+      return key(cmp(byName(gn), c)) === key(cmp(byName(gn), ans));
+    });
+  });
+}
+
+var SKEY = "dailyscoop.v6";
+function loadDB(){ try{ return JSON.parse(localStorage.getItem(SKEY)) || {}; }catch(e){ return {}; } }
+function saveDB(){ try{ localStorage.setItem(SKEY, JSON.stringify(DB)); }catch(e){} }
+
+var DB = loadDB();
+if(!DB.games) DB.games = {};
+if(!DB.stats) DB.stats = {played:0, won:0, streak:0, best:0};
+if(DB.stats.best === undefined) DB.stats.best = DB.stats.streak || 0;
+
+var activeDay, answer, game;
+function blankGame(){ return {guesses:[], phase:"play", points:0, bucket:null, outcome:null}; }
+
+(function buildHelp(){
+  var demo = document.getElementById("demoGrid");
+  cmp(byName("Vanilla"), byName("Strawberry")).forEach(function(c){
+    var d = document.createElement("div");
+    d.className = "cell " + c.s;
+    d.textContent = c.t;
+    demo.appendChild(d);
+  });
+
+  var gl = document.getElementById("glossary");
+  COLUMNS.forEach(function(c){
+    var box = document.createElement("div"); box.className = "gl";
+    var h = document.createElement("h3"); h.textContent = c.label;
+    var p = document.createElement("p"); p.textContent = c.blurb;
+    var v = document.createElement("div"); v.className = "vals";
+    c.vals.forEach(function(val){
+      var s = document.createElement("span");
+      if(val === "|"){ s.className = "sep"; s.textContent = "—"; } else { s.textContent = val; }
+      v.appendChild(s);
+    });
+    var e = document.createElement("p"); e.className = "eg"; e.innerHTML = c.eg;
+    box.appendChild(h); box.appendChild(p); box.appendChild(v); box.appendChild(e);
+    gl.appendChild(box);
+  });
+
+  document.getElementById("poolLine").textContent =
+    "On any given day the answer is one of " + ANSWER_ORDER.length +
+    " flavours out of the " + FLAVOURS.length + " you can guess from.";
+  document.getElementById("rosterNote").textContent =
+    FLAVOURS.length + " flavours to guess from, " + ANSWER_ORDER.length + " of which can be the answer.";
+})();
+
+var rowsEl = document.getElementById("rows");
+var ticketEl = document.getElementById("ticket");
+
+function render(){
+  rowsEl.innerHTML = "";
+  game.guesses.forEach(function(name, i){
+    var labelRow = document.createElement("div");
+    labelRow.className = "row";
+    var nm = document.createElement("div");
+    nm.className = "guessed-name";
+    var num = document.createElement("em"); num.textContent = (i + 1) + ".";
+    nm.appendChild(num);
+    nm.appendChild(document.createTextNode("  " + name));
+    labelRow.appendChild(nm);
+    rowsEl.appendChild(labelRow);
+
+    var row = document.createElement("div");
+    row.className = "row";
+    cmp(byName(name), answer).forEach(function(c, j){
+      var d = document.createElement("div");
+      d.className = "cell reveal " + c.s;
+      d.style.animationDelay = (j * 0.06) + "s";
+      d.appendChild(document.createTextNode(c.t));
+      if(c.s === "near"){
+        var m = document.createElement("span");
+        m.className = "mark"; m.textContent = "close";
+        d.appendChild(m);
+      }
+      row.appendChild(d);
+    });
+    rowsEl.appendChild(row);
+  });
+
+  for(var b = 0; b < Math.max(0, MAX - game.guesses.length); b++){
+    var r = document.createElement("div"); r.className = "row";
+    for(var k = 0; k < 6; k++){
+      var e = document.createElement("div"); e.className = "cell empty";
+      r.appendChild(e);
+    }
+    rowsEl.appendChild(r);
+  }
+
+  if(game.phase === "play"){
+    var left = game.guesses.length ? survivors(game.guesses, answer).length : ANSWER_ORDER.length;
+    ticketEl.hidden = false;
+    document.getElementById("remainCount").textContent = left;
+    document.getElementById("remainWord").textContent =
+      (left === 1 ? "flavour still fits" : "flavours still fit");
+  } else {
+    ticketEl.hidden = true;
+  }
+}
+
+var input = document.getElementById("guessInput");
+var menu = document.getElementById("menu");
+var menuList = document.getElementById("menuList");
+var menuNote = document.getElementById("menuNote");
+var guessBtn = document.getElementById("guessBtn");
+var active = -1, matches = [];
+
+/* The dropdown always lists every flavour matching what has been typed.
+   Elimination never removes anything from it, and flavours you have already
+   guessed stay visible but greyed, so the book reads the same size all game. */
+function openMenu(){
+  var q = input.value.trim().toLowerCase();
+  matches = FLAVOURS.filter(function(f){ return f.n.toLowerCase().indexOf(q) > -1; });
+  menuList.innerHTML = "";
+  matches.forEach(function(f, i){
+    var used = game.guesses.indexOf(f.n) > -1;
+    var li = document.createElement("li");
+    li.setAttribute("role", "option");
+    li.setAttribute("aria-selected", i === active ? "true" : "false");
+    if(used){ li.className = "used"; li.setAttribute("aria-disabled", "true"); }
+    var a = document.createElement("span"); a.textContent = f.n;
+    var c = document.createElement("span"); c.className = "from";
+    c.textContent = used ? "already guessed" : f.trad;
+    li.appendChild(a); li.appendChild(c);
+    if(!used){ li.addEventListener("mousedown", function(ev){ ev.preventDefault(); pick(f.n); }); }
+    menuList.appendChild(li);
+  });
+  menuNote.textContent = matches.length + " of " + FLAVOURS.length + " flavours";
+  menu.hidden = (matches.length === 0);
+  input.setAttribute("aria-expanded", String(!menu.hidden));
+}
+function pick(n){
+  input.value = n; menu.hidden = true;
+  input.setAttribute("aria-expanded", "false");
+  active = -1; syncBtn(); guessBtn.focus();
+}
+function syncBtn(){
+  var v = input.value.trim();
+  guessBtn.disabled = !byName(v) || game.guesses.indexOf(v) > -1;
+}
+input.addEventListener("input", function(){ active = -1; openMenu(); syncBtn(); });
+input.addEventListener("focus", openMenu);
+input.addEventListener("blur", function(){
+  setTimeout(function(){ menu.hidden = true; input.setAttribute("aria-expanded","false"); }, 130);
+});
+input.addEventListener("keydown", function(e){
+  if(menu.hidden && e.key === "ArrowDown"){ openMenu(); return; }
+  if(e.key === "ArrowDown" || e.key === "ArrowUp"){
+    e.preventDefault();
+    if(!matches.length) return;
+    var step = (e.key === "ArrowDown" ? 1 : -1), tries = 0;
+    do {
+      active += step;
+      if(active < 0) active = matches.length - 1;
+      if(active >= matches.length) active = 0;
+      tries++;
+    } while(game.guesses.indexOf(matches[active].n) > -1 && tries <= matches.length);
+    Array.prototype.forEach.call(menuList.children, function(li, i){
+      li.setAttribute("aria-selected", i === active ? "true" : "false");
+      if(i === active) li.scrollIntoView({block:"nearest"});
+    });
+  } else if(e.key === "Enter"){
+    e.preventDefault();
+    if(active > -1 && matches[active]) pick(matches[active].n);
+    else if(byName(input.value.trim())) submit();
+  } else if(e.key === "Escape"){ menu.hidden = true; }
+});
+guessBtn.addEventListener("click", submit);
+
+function submit(){
+  var name = input.value.trim();
+  if(!byName(name) || game.guesses.indexOf(name) > -1) return;
+  game.guesses.push(name);
+  input.value = ""; guessBtn.disabled = true; menu.hidden = true;
+
+  if(name === answer.n){
+    finish("won", SCORE[game.guesses.length - 1], String(game.guesses.length));
+  } else if(game.guesses.length >= MAX){
+    game.phase = "lick"; saveDB(); render(); showLick();
+  } else {
+    saveDB(); render();
+  }
+}
+
+function scrub(text, name){
+  if(!text) return "";
+  return text.replace(new RegExp(name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "gi"), "this one");
+}
+
+function showLick(){
+  document.getElementById("entryPanel").hidden = true;
+  var panel = document.getElementById("lastLick");
+  panel.hidden = false;
+
+  var left = survivors(game.guesses, answer);
+  var chips = document.getElementById("lickChips");
+  var btn = document.getElementById("lickBtn");
+  var chosen = null;
+  chips.innerHTML = "";
+
+  /* Narrowing the field to a single flavour is the whole point of this round.
+     The player reasoned it out and only lacked the name, so they keep the point. */
+  var sub = panel.querySelector(".sub");
+  if(left.length === 1){
+    panel.querySelector("h2").textContent = "One flavour left";
+    sub.textContent = "You worked it out. You just did not have a name to put to it.";
+    btn.textContent = "Claim it";
+  } else {
+    panel.querySelector("h2").textContent = "Last lick";
+    sub.textContent = "You have run out of guesses, but you are not out of it yet. One of these still fits everything you found out.";
+    btn.textContent = "Take the last lick";
+  }
+
+  left.forEach(function(f){
+    var b = document.createElement("button");
+    b.className = "chip"; b.type = "button"; b.textContent = f.n;
+    b.setAttribute("aria-pressed", "false");
+    b.addEventListener("click", function(){
+      chosen = f.n;
+      Array.prototype.forEach.call(chips.children, function(c){ c.setAttribute("aria-pressed","false"); });
+      b.setAttribute("aria-pressed", "true");
+      btn.disabled = false;
+    });
+    chips.appendChild(b);
+  });
+  if(left.length === 1 && chips.firstChild) chips.firstChild.click();
+
+  var fp = document.getElementById("lickFact");
+  fp.innerHTML = "";
+  var lab = document.createElement("b"); lab.textContent = "Something to go on";
+  fp.appendChild(lab);
+  fp.appendChild(document.createTextNode(
+    scrub(answer.trivia, answer.n) || "There is nothing written down about this one yet."));
+
+  btn.disabled = (left.length !== 1);
+  btn.onclick = function(){
+    if(!chosen) return;
+    panel.hidden = true;
+    if(chosen === answer.n) finish("licked", LICK_SCORE, "lick");
+    else finish("lost", 0, "miss");
+  };
+}
+
+function finish(outcome, pts, bucket){
+  game.phase = "done"; game.points = pts; game.outcome = outcome; game.bucket = bucket;
+  DB.stats.played = (DB.stats.played || 0) + 1;
+  if(outcome === "won" || outcome === "licked") DB.stats.won = (DB.stats.won || 0) + 1;
+  if(activeDay === TODAY){
+    if(outcome === "lost") DB.stats.streak = 0;
+    else DB.stats.streak = (DB.stats.streak || 0) + 1;
+    if(DB.stats.streak > (DB.stats.best || 0)) DB.stats.best = DB.stats.streak;
+  }
+  saveDB(); render(); showResult(); buildArchive();
+}
+
+function box(el, label, text, fallback){
+  el.innerHTML = "";
+  var b = document.createElement("b"); b.textContent = label;
+  el.appendChild(b);
+  el.appendChild(document.createTextNode(text || fallback));
+}
+
+function showResult(){
+  document.getElementById("entryPanel").hidden = true;
+  document.getElementById("lastLick").hidden = true;
+  document.getElementById("result").hidden = false;
+
+  document.getElementById("verdict").textContent =
+    {won:"Got it.", licked:"Saved on the last lick.", lost:"Not this time."}[game.outcome];
+  document.getElementById("answerName").textContent = answer.n;
+  document.getElementById("points").textContent = game.points;
+
+  box(document.getElementById("factWhat"), "What it is", answer.what,
+      "No description written for this one yet.");
+  box(document.getElementById("factTrivia"), "Did you know", answer.trivia,
+      "Nothing on file for this one yet.");
+  showStats();
+}
+
+function showStats(){
+  document.getElementById("stats").hidden = false;
+  var s = DB.stats;
+
+  var days = Object.keys(DB.games).map(Number).filter(function(d){
+    return DB.games[d] && DB.games[d].phase === "done";
+  }).sort(function(a, b){ return b - a; });
+
+  var totalPts = days.reduce(function(t, d){ return t + (DB.games[d].points || 0); }, 0);
+  var avg = days.length ? (totalPts / days.length).toFixed(1) : "0";
+  var winPct = s.played ? Math.round((s.won / s.played) * 100) : 0;
+
+  document.getElementById("histNote").textContent =
+    "Everything below is kept in this browser and never sent anywhere.";
+
+  var mine = document.getElementById("mine");
+  mine.innerHTML = "";
+  [[days.length, "Rounds"], [winPct + "%", "Solved"], [s.streak || 0, "Streak"],
+   [s.best || 0, "Best"], [totalPts, "Points"], [avg, "Average"]].forEach(function(p){
+    var d = document.createElement("div");
+    var st = document.createElement("strong"); st.textContent = p[0];
+    var sp = document.createElement("span"); sp.textContent = p[1];
+    d.appendChild(st); d.appendChild(sp); mine.appendChild(d);
+  });
+
+  var list = document.getElementById("histlist");
+  list.innerHTML = "";
+  if(!days.length){
+    var p = document.createElement("p");
+    p.className = "histempty";
+    p.textContent = "Nothing finished yet. Rounds will start collecting here.";
+    list.appendChild(p);
+    return;
+  }
+  days.slice(0, 30).forEach(function(d){
+    var g = DB.games[d];
+    var row = document.createElement("div");
+    row.className = "hrow";
+
+    var num = document.createElement("span");
+    num.className = "num"; num.textContent = "No. " + (d + 1);
+
+    var nm = document.createElement("span");
+    nm.className = "nm"; nm.textContent = answerFor(d).n;
+
+    var rs = document.createElement("span");
+    if(g.outcome === "won"){
+      rs.className = "rs ok";
+      rs.textContent = g.bucket + (g.bucket === "1" ? " guess" : " guesses");
+    }
+    else if(g.outcome === "licked"){ rs.className = "rs save"; rs.textContent = "Last lick"; }
+    else { rs.className = "rs gone"; rs.textContent = "Missed"; }
+
+    var pt = document.createElement("span");
+    pt.className = "pt"; pt.textContent = g.points + " pt" + (g.points === 1 ? "" : "s");
+
+    row.appendChild(num); row.appendChild(nm); row.appendChild(rs); row.appendChild(pt);
+    list.appendChild(row);
+  });
+}
+
+function buildArchive(){
+  var grid = document.getElementById("archgrid");
+  grid.innerHTML = "";
+  for(var d = TODAY; d > TODAY - ARCHIVE_DAYS; d--){
+    (function(day){
+      var g = DB.games[day];
+      var b = document.createElement("button");
+      b.type = "button";
+      var cls = [];
+      if(day === TODAY) cls.push("today");
+      if(day === activeDay) cls.push("here");
+      var status = "Not played";
+      if(g && g.phase === "done"){
+        if(g.outcome === "won"){ status = g.bucket + "/" + MAX; cls.push("done"); }
+        else if(g.outcome === "licked"){ status = "Saved"; cls.push("done"); }
+        else { status = "Missed"; }
+      } else if(g && g.guesses.length){
+        status = "In progress";
+      }
+      b.className = cls.join(" ");
+      var t = document.createElement("strong");
+      t.textContent = day === TODAY ? "Today" : ("No. " + (day + 1));
+      var e = document.createElement("em"); e.textContent = status;
+      b.appendChild(t); b.appendChild(e);
+      b.addEventListener("click", function(){ loadDay(day); });
+      grid.appendChild(b);
+    })(d);
+  }
+}
+
+function loadDay(day){
+  activeDay = day;
+  answer = answerFor(day);
+  if(!DB.games[day]) DB.games[day] = blankGame();
+  game = DB.games[day];
+
+  document.getElementById("eyebrow").innerHTML =
+    "Flavour No.&nbsp;<b>" + (day + 1) + "</b> &middot; six guesses" +
+    (day === TODAY ? "" : " &middot; from the archive");
+
+  var bar = document.getElementById("archbar");
+  bar.hidden = (day === TODAY);
+  if(day !== TODAY){
+    document.getElementById("archbarText").textContent =
+      "You are playing flavour no. " + (day + 1) + ", which is one of the older ones.";
+  }
+
+  document.getElementById("result").hidden = true;
+  document.getElementById("lastLick").hidden = true;
+  document.getElementById("stats").hidden = true;
+  document.getElementById("entryPanel").hidden = false;
+  input.value = ""; guessBtn.disabled = true; menu.hidden = true; active = -1;
+
+  render();
+  buildArchive();
+  if(game.phase === "done") showResult();
+  else if(game.phase === "lick") showLick();
+
+  saveDB();
+  window.scrollTo({top:0, behavior:"smooth"});
+}
+
+document.getElementById("backToday").addEventListener("click", function(){ loadDay(TODAY); });
+
+document.getElementById("shareBtn").addEventListener("click", function(){
+  var glyph = {hit:"🟩", near:"🟨", miss:"⬜"};
+  var lines = game.guesses.map(function(n){
+    return cmp(byName(n), answer).map(function(c){ return glyph[c.s]; }).join("");
+  });
+  var head = "The Daily Scoop No. " + (activeDay + 1) + "\n";
+  if(game.outcome === "won"){
+    head += game.guesses.length + "/" + MAX + " · " + game.points + " pts\n";
+  } else if(game.outcome === "licked"){
+    head += "🍦 saved on the last lick · " + game.points + " pt\n";
+  } else {
+    head += "X/" + MAX + " · 0 pts\n";
+  }
+  var text = head + lines.join("\n");
+  var btn = this;
+  function done(){
+    btn.textContent = "Copied";
+    setTimeout(function(){ btn.textContent = "Copy result"; }, 1600);
+  }
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(done, function(){ window.prompt("Copy your result:", text); });
+  } else { window.prompt("Copy your result:", text); }
+});
+
+document.getElementById("resetBtn").addEventListener("click", function(){
+  if(!window.confirm("Clear every round you have played, including the archive?")) return;
+  try{ localStorage.removeItem(SKEY); }catch(e){}
+  window.location.reload();
+});
+
+loadDay(TODAY);
+</script>
+</body>
+</html>
